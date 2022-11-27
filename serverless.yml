@@ -19,8 +19,6 @@ provider:
 
   region: us-east-1 # controlled by parameters, not CLI or environment, resources can still use provider.region
   stage: dev # defaults to offline mode if none injected from CLI
-  profile: admin@bruce-baynosa
-
   disableRollback: false
 
 
