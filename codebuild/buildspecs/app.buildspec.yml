@@ -8,5 +8,6 @@ phases:
       - npm install -g serverless
   build:
     commands:
+      - node --version
       - npm run build
       - serverless deploy
