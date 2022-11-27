@@ -5,6 +5,9 @@ frameworkVersion: "3"
 
 service: todolist-app
 
+params:
+  dev:
+    WebsiteS3BucketName: "todolist-app-12312sdfzxc"
 plugins:
   # - serverless-deployment-bucket # https://www.npmjs.com/package/serverless-deployment-bucket
   - serverless-s3-sync # https://www.npmjs.com/package/serverless-s3-sync
@@ -25,7 +28,7 @@ custom:
 
   # Deploy website content via s3Sync
   s3Sync:
-    - bucketName: "todolist-app-12312sdfzxc"
+    - bucketName: ${param:WebsiteS3BucketName}
       localDir: build
 
 resources:
@@ -33,4 +36,36 @@ resources:
     WebsiteBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: "todolist-app-12312sdfzxc"
+        BucketName: ${param:WebsiteS3BucketName}
+    s3BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: !Ref WebsiteBucket
+        PolicyDocument: 
+          Statement:
+            - Sid: PublicReadAccess
+              Effect: Allow
+              Action:
+                - s3:GetObject
+              Resource:
+                - !Join ["", [ !GetAtt WebsiteBucket.Arn, "/*" ]]
+              Principal: "*"
+    WebsiteCloudFrontDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          Enabled: true
+          DefaultRootObject: index.html
+          Origins:      
+            - DomainName: !GetAtt WebsiteBucket.RegionalDomainName # TODO trying regional over old .DomainName 
+              Id: WebsiteBucket.${param:WebsiteS3BucketName} # Origin reference is env safe due to bucket 
+              S3OriginConfig: # Limiting access by not using a CustomOriginConfig so that S3 bucket access is restricted
+                OriginAccessIdentity:
+                  # OriginAccessIdentity: !Join ["", ["origin-access-identity/cloudfront/", !Ref WebsiteCloudfrontOAI]]
+          DefaultCacheBehavior:
+            TargetOriginId: WebsiteBucket.${param:WebsiteS3BucketName} # Origin reference is env safe due to bucket ref
+            ViewerProtocolPolicy: redirect-to-https
+            ForwardedValues:
+              QueryString: false # TODO try None  as not sure what this really sets out to do - as it is cache, it depends on how we use
+              Cookies:
+                Forward: none
