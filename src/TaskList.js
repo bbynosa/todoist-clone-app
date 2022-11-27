@@ -6,7 +6,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Link, Radio } from "@mui/material";
+import { Link, Button } from "@mui/material";
 
 // function createData(name, calories, fat, carbs, protein) {
 //   return { name, calories, fat, carbs, protein };
@@ -20,7 +20,7 @@ import { Link, Radio } from "@mui/material";
 //   createData('Gingerbread', 356, 16.0, 49, 3.9),
 // ];
 
-export default function TaskList({ rows, selectTask }) {
+export default function TaskList({ rows, selectTask, deleteTask }) {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -30,6 +30,7 @@ export default function TaskList({ rows, selectTask }) {
             <TableCell align="right">Status</TableCell>
             <TableCell align="right">Priority</TableCell>
             <TableCell align="right">Assigned to</TableCell>
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -55,6 +56,16 @@ export default function TaskList({ rows, selectTask }) {
                 <TableCell align="right">{row.status}</TableCell>
                 <TableCell align="right">{row.priority}</TableCell>
                 <TableCell align="right">{row.assignedTo}</TableCell>
+                <TableCell align="right">
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => deleteTask(row.id)}
+                    color="error"
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
               </TableRow>
             ))
           ) : (

@@ -122,12 +122,19 @@ export default function App() {
     setSelectedTaskId("");
   };
 
+  const deleteTask = (id) => {
+    const data = JSON.parse(localStorage.getItem("tasks"));
+    const newRows = data.filter((task) => task.id !== id);
+    localStorage.setItem("tasks", JSON.stringify(newRows));
+    getTasks();
+  };
+
   return (
     <div className="App">
       <Button variant="contained" onClick={handleClickOpen}>
         Add a task
       </Button>
-      <TaskList rows={rows} selectTask={selectTask} />
+      <TaskList rows={rows} selectTask={selectTask} deleteTask={deleteTask} />
       {open && (
         <TaskForm
           open={open}
