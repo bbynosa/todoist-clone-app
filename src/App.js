@@ -81,7 +81,8 @@ export default function App() {
     setOpen(true);
   };
   const saveTask = (newTask) => {
-    const data = JSON.parse(localStorage.getItem("tasks"));
+    // set to empty array if storage is null
+    const data = JSON.parse(localStorage.getItem("tasks")) ?? [];
     if (formMode === "add") {
       setOpen(false);
       data.push(newTask);
