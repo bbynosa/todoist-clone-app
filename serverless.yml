@@ -1,0 +1,36 @@
+# For full config options, check the docs at https://docs.serverless.com
+# also see https://serverless.com/framework/docs/providers/aws/guide/serverless.yml
+# or https://serverless.com/framework/docs/providers/aws/guide/functions/
+frameworkVersion: "3"
+
+service: todolist-app
+
+plugins:
+  # - serverless-deployment-bucket # https://www.npmjs.com/package/serverless-deployment-bucket
+  - serverless-s3-sync # https://www.npmjs.com/package/serverless-s3-sync
+  # - serverless-offline-ssm # https://www.npmjs.com/package/serverless-offline-ssm
+  # - serverless-offline # https://www.npmjs.com/package/serverless-offline
+
+provider:
+  name: aws
+
+  region: us-east-1 # controlled by parameters, not CLI or environment, resources can still use provider.region
+  stage: dev # defaults to offline mode if none injected from CLI
+  profile: admin@bruce-baynosa
+
+  disableRollback: false
+
+
+custom:
+
+  # Deploy website content via s3Sync
+  s3Sync:
+    - bucketName: "todolist-app-12312sdfzxc"
+      localDir: build
+
+resources:
+  Resources:
+    WebsiteBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: "todolist-app-12312sdfzxc"
