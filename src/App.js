@@ -5,6 +5,7 @@ import TaskList from "./TaskList";
 import { useEffect, useState } from "react";
 import TaskForm from "./TaskForm";
 import TaskEditForm from "./TaskEditForm";
+import { Typography } from "@mui/material";
 
 function createData(id, name, status, priority, notes, createdBy, assignedTo) {
   return { id, name, status, priority, notes, createdBy, assignedTo };
@@ -132,6 +133,9 @@ export default function App() {
 
   return (
     <div className="App">
+      <Typography variant="h3">
+        Todolist App
+      </Typography>
       <Button variant="contained" onClick={handleClickOpen}>
         Add a task
       </Button>
