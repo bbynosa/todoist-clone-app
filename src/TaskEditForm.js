@@ -12,8 +12,12 @@ import {
   MenuItem,
   InputLabel,
   useThemeProps,
+  Box,
+  CircularProgress,
 } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
+import axios from "./axios";
+import Spinner from "./components/Spinner";
 
 const status = ["Not started", "In progress", "Completed"];
 const priorities = ["Urgent", "Important", "Medium", "Low"];
@@ -23,22 +27,27 @@ const initialState = {
   status: "",
   priority: "",
   notes: "",
-  createdBy: "",
-  assignedTo: "",
+  created_by: "",
+  assigned_to: "",
 };
 
-export default function TaskEditForm({ open, handleClose, id, saveTask}) {
+export default function TaskEditForm({ open, handleClose, id, saveTask }) {
   const [task, setTask] = React.useState({
     ...initialState,
   });
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     if (id) {
-      const data = JSON.parse(localStorage.getItem('tasks'));
-      const selectedTask = data.find(task => task.id === id);
-      setTask(selectedTask);
+      getTodo(id);
     }
   }, []);
+
+  const getTodo = async (id) => {
+    const { data } = await axios.get(`/todos/${id}`);
+    setTask(data);
+    setLoading(false);
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -62,95 +71,100 @@ export default function TaskEditForm({ open, handleClose, id, saveTask}) {
 
   return (
     <div>
-      {/* <Button variant="outlined" onClick={handleClickOpen}>
-        Open form dialog
-      </Button> */}
       <Dialog open={open}>
         <DialogTitle>Edit task</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Name"
-            type="text"
-            fullWidth
-            variant="standard"
-            name="name"
-            onChange={handleChange}
-            value={task.name}
-          />
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Status</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={task.status}
-              label="Status"
-              name="status"
-              onChange={handleChange}
-            >
-              {status.map((status) => (
-                <MenuItem value={status}>{status}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Priority</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={task.priority}
-              label="Priority"
-              name="priority"
-              onChange={handleChange}
-            >
-              {priorities.map((priority) => (
-                <MenuItem value={priority}>{priority}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="notes"
-            label="Notes"
-            type="text"
-            fullWidth
-            variant="standard"
-            name="notes"
-            onChange={handleChange}
-            value={task.notes}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="createdBy"
-            label="Created by"
-            type="text"
-            fullWidth
-            variant="standard"
-            name="createdBy"
-            value={task.createdBy}
-            onChange={handleChange}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="assignedTo"
-            label="Assigned to"
-            type="text"
-            fullWidth
-            variant="standard"
-            name="assignedTo"
-            value={task.assignedTo}
-            onChange={handleChange}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={close}>Cancel</Button>
-          <Button onClick={save}>Save</Button>
-        </DialogActions>
+        {!loading ? (
+          <>
+            <DialogContent>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="name"
+                label="Name"
+                type="text"
+                fullWidth
+                variant="standard"
+                name="name"
+                onChange={handleChange}
+                value={task.name}
+              />
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={task.status}
+                  label="Status"
+                  name="status"
+                  onChange={handleChange}
+                  defaultValue="Not started"
+                >
+                  {status.map((status) => (
+                    <MenuItem value={status}>{status}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Priority</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={task.priority}
+                  label="Priority"
+                  name="priority"
+                  defaultValue="Low"
+                  onChange={handleChange}
+                >
+                  {priorities.map((priority) => (
+                    <MenuItem value={priority}>{priority}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="notes"
+                label="Notes"
+                type="text"
+                fullWidth
+                variant="standard"
+                name="notes"
+                onChange={handleChange}
+                value={task.notes}
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="created_by"
+                label="Created by"
+                type="text"
+                fullWidth
+                variant="standard"
+                name="created_by"
+                value={task.created_by}
+                onChange={handleChange}
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="assigned_to"
+                label="Assigned to"
+                type="text"
+                fullWidth
+                variant="standard"
+                name="assigned_to"
+                value={task.assigned_to}
+                onChange={handleChange}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={close}>Cancel</Button>
+              <Button onClick={save}>Save</Button>
+            </DialogActions>
+          </>
+        ) : (
+          <Spinner />
+        )}
       </Dialog>
     </div>
   );

@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import TaskForm from "./TaskForm";
 import TaskEditForm from "./TaskEditForm";
 import { Typography } from "@mui/material";
+import axios from "./axios";
+import Spinner from "./components/Spinner";
 
 function createData(id, name, status, priority, notes, createdBy, assignedTo) {
   return { id, name, status, priority, notes, createdBy, assignedTo };
@@ -61,50 +63,63 @@ export default function App() {
   const [selectedTaskId, setSelectedTaskId] = useState("");
   const [selectedTask, setSelectedTask] = useState({});
   const [formMode, setFormMode] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (localStorage.getItem("tasks")) {
-      const data = localStorage.getItem("tasks");
-      setRows(JSON.parse(data));
+    try {
+      listTodos();
+    } catch (error) {
+      console.error(error);
     }
   }, []);
 
   useEffect(() => {
-    if (selectedTaskId) {
-      const tasks = JSON.parse(localStorage.getItem("tasks"));
-      const selectedTask = tasks.find((task) => task.id === selectedTaskId);
-      setSelectedTask(selectedTask);
+    try {
+      if (selectedTaskId) {
+        getTodo();
+      }
+    } catch (error) {
+      console.error(error);
     }
   }, [selectedTaskId]);
+
+  const listTodos = async () => {
+    const { data } = await axios.get("/todos");
+    setRows(data);
+    setLoading(false);
+  };
+
+  const getTodo = async () => {
+    const { data } = await axios.get(`/todos/${selectedTaskId}`);
+    setSelectedTask(data);
+  };
+
+  const createTodo = async (data) => {
+    await axios.post("/todos", data);
+  };
+
+  const editTodo = async (data) => await axios.put(`/todos/${data.id}`, data);
+
+  const deleteTodo = async (id) => await axios.delete(`/todos/${id}`);
 
   const handleClickOpen = () => {
     setFormMode("add");
     setOpen(true);
   };
-  const saveTask = (newTask) => {
-    // set to empty array if storage is null
-    const data = JSON.parse(localStorage.getItem("tasks")) ?? [];
-    if (formMode === "add") {
-      setOpen(false);
-      data.push(newTask);
-      localStorage.setItem("tasks", JSON.stringify(data));
-    } else if (formMode === "edit") {
-      setOpenEdit(false);
 
-      const newRows = data.map((row) => {
-        if (row.id === newTask.id) {
-          return newTask;
-        }
-        return row;
-      });
-      localStorage.setItem("tasks", JSON.stringify(newRows));
+  const saveTask = async (task) => {
+    try {
+      if (formMode === "add") {
+        await createTodo(task);
+        setOpen(false);
+      } else if (formMode === "edit") {
+        await editTodo(task);
+        setOpenEdit(false);
+      }
+      await listTodos();
+    } catch (error) {
+      console.error(error);
     }
-    getTasks();
-  };
-
-  const getTasks = () => {
-    const data = JSON.parse(localStorage.getItem("tasks"));
-    setRows(data);
   };
 
   const selectTask = (taskId) => {
@@ -124,22 +139,22 @@ export default function App() {
     setSelectedTaskId("");
   };
 
-  const deleteTask = (id) => {
-    const data = JSON.parse(localStorage.getItem("tasks"));
-    const newRows = data.filter((task) => task.id !== id);
-    localStorage.setItem("tasks", JSON.stringify(newRows));
-    getTasks();
+  const deleteTask = async (id) => {
+    await deleteTodo(id);
+    await listTodos();
   };
 
   return (
     <div className="App">
-      <Typography variant="h3">
-        Todolist App
-      </Typography>
+      <Typography variant="h3">Todolist App</Typography>
       <Button variant="contained" onClick={handleClickOpen}>
         Add a task
       </Button>
-      <TaskList rows={rows} selectTask={selectTask} deleteTask={deleteTask} />
+      {!loading ? (
+        <TaskList rows={rows} selectTask={selectTask} deleteTask={deleteTask} />
+      ) : (
+        <Spinner />
+      )}
       {open && (
         <TaskForm
           open={open}

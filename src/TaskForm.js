@@ -23,20 +23,12 @@ const initialState = {
   status: "",
   priority: "",
   notes: "",
-  createdBy: "",
-  assignedTo: "",
+  created_by: "",
+  assigned_to: "",
 };
 
 export default function TaskForm({ open, handleClose, saveTask }) {
-  const [task, setTask] = React.useState({
-    id: uuidv4(),
-    name: "",
-    status: "",
-    priority: "",
-    notes: "",
-    createdBy: "",
-    assignedTo: "",
-  });
+  const [task, setTask] = React.useState(initialState);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -50,13 +42,13 @@ export default function TaskForm({ open, handleClose, saveTask }) {
 
   const save = () => {
     console.log(task);
-    saveTask(task);
+    saveTask({ ...task, id: uuidv4() });
   };
 
   const close = () => {
-    setTask({... initialState});
+    setTask({ ...initialState });
     handleClose();
-  }
+  };
 
   return (
     <div>
@@ -123,25 +115,25 @@ export default function TaskForm({ open, handleClose, saveTask }) {
           <TextField
             autoFocus
             margin="dense"
-            id="createdBy"
+            id="created_by"
             label="Created by"
             type="text"
             fullWidth
             variant="standard"
-            name="createdBy"
-            value={task.createdBy}
+            name="created_by"
+            value={task.created_by}
             onChange={handleChange}
           />
           <TextField
             autoFocus
             margin="dense"
-            id="assignedTo"
+            id="assigned_to"
             label="Assigned to"
             type="text"
             fullWidth
             variant="standard"
-            name="assignedTo"
-            value={task.assignedTo}
+            name="assigned_to"
+            value={task.assigned_to}
             onChange={handleChange}
           />
         </DialogContent>
