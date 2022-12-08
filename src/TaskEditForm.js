@@ -18,6 +18,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import axios from "./axios";
 import Spinner from "./components/Spinner";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const status = ["Not started", "In progress", "Completed"];
 const priorities = ["Urgent", "Important", "Medium", "Low"];
@@ -31,7 +32,13 @@ const initialState = {
   assigned_to: "",
 };
 
-export default function TaskEditForm({ open, handleClose, id, saveTask }) {
+export default function TaskEditForm({
+  open,
+  handleClose,
+  id,
+  saveTask,
+  saveLoading,
+}) {
   const [task, setTask] = React.useState({
     ...initialState,
   });
@@ -72,9 +79,9 @@ export default function TaskEditForm({ open, handleClose, id, saveTask }) {
   return (
     <div>
       <Dialog open={open}>
-        <DialogTitle>Edit task</DialogTitle>
         {!loading ? (
           <>
+            <DialogTitle>Edit task</DialogTitle>
             <DialogContent>
               <TextField
                 autoFocus
@@ -159,7 +166,9 @@ export default function TaskEditForm({ open, handleClose, id, saveTask }) {
             </DialogContent>
             <DialogActions>
               <Button onClick={close}>Cancel</Button>
-              <Button onClick={save}>Save</Button>
+              <LoadingButton onClick={save} loading={saveLoading}>
+                Save
+              </LoadingButton>
             </DialogActions>
           </>
         ) : (

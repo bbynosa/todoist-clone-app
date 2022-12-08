@@ -63,7 +63,8 @@ export default function App() {
   const [selectedTaskId, setSelectedTaskId] = useState("");
   const [selectedTask, setSelectedTask] = useState({});
   const [formMode, setFormMode] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [saveLoading, setSaveLoading] = useState(false);
 
   useEffect(() => {
     try {
@@ -84,6 +85,7 @@ export default function App() {
   }, [selectedTaskId]);
 
   const listTodos = async () => {
+    setLoading(true);
     const { data } = await axios.get("/todos");
     setRows(data);
     setLoading(false);
@@ -109,11 +111,14 @@ export default function App() {
 
   const saveTask = async (task) => {
     try {
+      setSaveLoading(true);
       if (formMode === "add") {
         await createTodo(task);
+        setSaveLoading(false);
         setOpen(false);
       } else if (formMode === "edit") {
         await editTodo(task);
+        setSaveLoading(false);
         setOpenEdit(false);
       }
       await listTodos();
@@ -140,8 +145,10 @@ export default function App() {
   };
 
   const deleteTask = async (id) => {
+    setLoading(true);
     await deleteTodo(id);
     await listTodos();
+    setLoading(false);
   };
 
   return (
@@ -161,6 +168,7 @@ export default function App() {
           handleClose={handleClose}
           saveTask={saveTask}
           data={selectedTask}
+          loading={saveLoading}
         />
       )}
 
@@ -170,6 +178,7 @@ export default function App() {
           handleClose={handleCLoseEdit}
           id={selectedTaskId}
           saveTask={saveTask}
+          saveLoading={saveLoading}
         />
       )}
     </div>

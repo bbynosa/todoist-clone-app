@@ -14,6 +14,8 @@ import {
   useThemeProps,
 } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
+import Spinner from "./components/Spinner";
+import { LoadingButton } from "@mui/lab";
 
 const status = ["Not started", "In progress", "Completed"];
 const priorities = ["Urgent", "Important", "Medium", "Low"];
@@ -27,7 +29,7 @@ const initialState = {
   assigned_to: "",
 };
 
-export default function TaskForm({ open, handleClose, saveTask }) {
+export default function TaskForm({ open, handleClose, saveTask, loading }) {
   const [task, setTask] = React.useState(initialState);
 
   const handleChange = (event) => {
@@ -52,9 +54,6 @@ export default function TaskForm({ open, handleClose, saveTask }) {
 
   return (
     <div>
-      {/* <Button variant="outlined" onClick={handleClickOpen}>
-        Open form dialog
-      </Button> */}
       <Dialog open={open}>
         <DialogTitle>Add task</DialogTitle>
         <DialogContent>
@@ -139,7 +138,9 @@ export default function TaskForm({ open, handleClose, saveTask }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={close}>Cancel</Button>
-          <Button onClick={save}>Save</Button>
+          <LoadingButton onClick={save} loading={loading}>
+            Save
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </div>

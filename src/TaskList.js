@@ -8,7 +8,6 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Link, Button } from "@mui/material";
 
-
 export default function TaskList({ rows, selectTask, deleteTask }) {
   return (
     <TableContainer component={Paper}>
@@ -46,6 +45,7 @@ export default function TaskList({ rows, selectTask, deleteTask }) {
                 <TableCell align="right">{row.priority}</TableCell>
                 <TableCell align="right">{row.assigned_to}</TableCell>
                 <TableCell align="right">
+                  {/* TODO: replace to loadingButton MUI component */}
                   <Button
                     variant="outlined"
                     size="small"
