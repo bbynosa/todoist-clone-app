@@ -100,7 +100,6 @@ export default function TaskForm({ open, handleClose, saveTask, loading }) {
             </Select>
           </FormControl>
           <TextField
-            autoFocus
             margin="dense"
             id="notes"
             label="Notes"
@@ -112,7 +111,6 @@ export default function TaskForm({ open, handleClose, saveTask, loading }) {
             value={task.notes}
           />
           <TextField
-            autoFocus
             margin="dense"
             id="created_by"
             label="Created by"
@@ -124,7 +122,6 @@ export default function TaskForm({ open, handleClose, saveTask, loading }) {
             onChange={handleChange}
           />
           <TextField
-            autoFocus
             margin="dense"
             id="assigned_to"
             label="Assigned to"

@@ -128,7 +128,6 @@ export default function TaskEditForm({
                 </Select>
               </FormControl>
               <TextField
-                autoFocus
                 margin="dense"
                 id="notes"
                 label="Notes"
@@ -140,7 +139,6 @@ export default function TaskEditForm({
                 value={task.notes}
               />
               <TextField
-                autoFocus
                 margin="dense"
                 id="created_by"
                 label="Created by"
@@ -152,7 +150,6 @@ export default function TaskEditForm({
                 onChange={handleChange}
               />
               <TextField
-                autoFocus
                 margin="dense"
                 id="assigned_to"
                 label="Assigned to"

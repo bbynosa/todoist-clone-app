@@ -109,7 +109,7 @@ export default function App() {
     setOpen(true);
   };
 
-  const saveTask = async (task) => {
+  const saveTodo = async (task) => {
     try {
       setSaveLoading(true);
       if (formMode === "add") {
@@ -151,14 +151,18 @@ export default function App() {
     setLoading(false);
   };
 
+  const handleFormMode = (mode) => {
+    setFormMode(mode);
+  }
+
   return (
     <div className="App">
       <Typography variant="h3">Todolist App</Typography>
-      <Button variant="contained" onClick={handleClickOpen}>
+      {/* <Button variant="contained" onClick={handleClickOpen}>
         Add a task
-      </Button>
+      </Button> */}
       {!loading ? (
-        <TaskList rows={rows} selectTask={selectTask} deleteTask={deleteTask} />
+        <TaskList rows={rows} selectTask={selectTask} deleteTask={deleteTask} saveTodo={saveTodo} formMode={handleFormMode}/>
       ) : (
         <Spinner />
       )}
@@ -166,7 +170,7 @@ export default function App() {
         <TaskForm
           open={open}
           handleClose={handleClose}
-          saveTask={saveTask}
+          saveTask={saveTodo}
           data={selectedTask}
           loading={saveLoading}
         />
@@ -177,7 +181,7 @@ export default function App() {
           open={openEdit}
           handleClose={handleCLoseEdit}
           id={selectedTaskId}
-          saveTask={saveTask}
+          saveTask={saveTodo}
           saveLoading={saveLoading}
         />
       )}
