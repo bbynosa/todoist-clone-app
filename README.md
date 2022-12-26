@@ -3,7 +3,8 @@
 ```cli
 npm install
 ```
-2. Run React app
+2. Make sure the local API is already running before you run this React app
+3. Run React app
 ```cli
 npm start
 ```
