@@ -8,6 +8,7 @@ import TaskEditForm from "./TaskEditForm";
 import { Typography } from "@mui/material";
 import axios from "./axios";
 import Spinner from "./components/Spinner";
+import AppMenuBar from "./AppMenuBar";
 
 function createData(id, name, status, priority, notes, createdBy, assignedTo) {
   return { id, name, status, priority, notes, createdBy, assignedTo };
@@ -157,7 +158,7 @@ export default function App() {
 
   return (
     <div className="App">
-      <Typography variant="h3">Todolist App</Typography>
+      <AppMenuBar />
       {/* <Button variant="contained" onClick={handleClickOpen}>
         Add a task
       </Button> */}
