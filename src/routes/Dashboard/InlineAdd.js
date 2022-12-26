@@ -15,7 +15,7 @@ import {
   TableCell,
 } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
-import Spinner from "./components/Spinner";
+import Spinner from "../../components/Spinner";
 import { LoadingButton } from "@mui/lab";
 
 const status = ["Not started", "In progress", "Completed"];

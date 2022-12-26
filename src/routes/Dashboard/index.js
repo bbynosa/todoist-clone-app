@@ -1,14 +1,11 @@
-import logo from "./logo.svg";
-import "./App.css";
 import Button from "@mui/material/Button";
 import TaskList from "./TaskList";
 import { useEffect, useState } from "react";
 import TaskForm from "./TaskForm";
 import TaskEditForm from "./TaskEditForm";
 import { Typography } from "@mui/material";
-import axios from "./axios";
-import Spinner from "./components/Spinner";
-import AppMenuBar from "./AppMenuBar";
+import axios from "../../api/axios";
+import Spinner from "../../components/Spinner";
 
 function createData(id, name, status, priority, notes, createdBy, assignedTo) {
   return { id, name, status, priority, notes, createdBy, assignedTo };
@@ -57,7 +54,7 @@ const seedData = [
   ),
 ];
 
-export default function App() {
+export default function Dashboard() {
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [rows, setRows] = useState([]);
@@ -154,16 +151,21 @@ export default function App() {
 
   const handleFormMode = (mode) => {
     setFormMode(mode);
-  }
+  };
 
   return (
-    <div className="App">
-      <AppMenuBar />
+    <div>
       {/* <Button variant="contained" onClick={handleClickOpen}>
         Add a task
       </Button> */}
       {!loading ? (
-        <TaskList rows={rows} selectTask={selectTask} deleteTask={deleteTask} saveTodo={saveTodo} formMode={handleFormMode}/>
+        <TaskList
+          rows={rows}
+          selectTask={selectTask}
+          deleteTask={deleteTask}
+          saveTodo={saveTodo}
+          formMode={handleFormMode}
+        />
       ) : (
         <Spinner />
       )}

@@ -16,8 +16,8 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
-import axios from "./axios";
-import Spinner from "./components/Spinner";
+import axios from "../../api/axios";
+import Spinner from "../../components/Spinner";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 const status = ["Not started", "In progress", "Completed"];
