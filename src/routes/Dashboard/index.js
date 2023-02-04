@@ -165,6 +165,7 @@ export default function Dashboard() {
           deleteTask={deleteTask}
           saveTodo={saveTodo}
           formMode={handleFormMode}
+          setRows={setRows}
         />
       ) : (
         <Spinner />
