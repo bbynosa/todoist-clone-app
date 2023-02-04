@@ -1,11 +1,18 @@
-import Button from "@mui/material/Button";
-import TaskList from "./TaskList";
+// React Imports
 import { useEffect, useState } from "react";
+
+// Material UI Imports
+import Button from "@mui/material/Button";
+import { Typography } from "@mui/material";
+
+// Component Imports
+import TaskList from "./TaskList";
 import TaskForm from "./TaskForm";
 import TaskEditForm from "./TaskEditForm";
-import { Typography } from "@mui/material";
-import axios from "../../api/axios";
 import Spinner from "../../components/Spinner";
+
+// API Imports
+import { getTodos, getTodo, postTodo, putTodo, deleteTodo } from '../../api';
 
 function createData(id, name, status, priority, notes, createdBy, assignedTo) {
   return { id, name, status, priority, notes, createdBy, assignedTo };
@@ -75,7 +82,7 @@ export default function Dashboard() {
   useEffect(() => {
     try {
       if (selectedTaskId) {
-        getTodo();
+        getTask();
       }
     } catch (error) {
       console.error(error);
@@ -84,23 +91,14 @@ export default function Dashboard() {
 
   const listTodos = async () => {
     setLoading(true);
-    const { data } = await axios.get("/todos");
+    const data = await getTodos();
     setRows(data);
     setLoading(false);
   };
 
-  const getTodo = async () => {
-    const { data } = await axios.get(`/todos/${selectedTaskId}`);
-    setSelectedTask(data);
+  const getTask = async () => {
+    setSelectedTask(await getTodo(selectedTaskId));
   };
-
-  const createTodo = async (data) => {
-    await axios.post("/todos", data);
-  };
-
-  const editTodo = async (data) => await axios.put(`/todos/${data.id}`, data);
-
-  const deleteTodo = async (id) => await axios.delete(`/todos/${id}`);
 
   const handleClickOpen = () => {
     setFormMode("add");
@@ -111,11 +109,11 @@ export default function Dashboard() {
     try {
       setSaveLoading(true);
       if (formMode === "add") {
-        await createTodo(task);
+        await postTodo(task);
         setSaveLoading(false);
         setOpen(false);
       } else if (formMode === "edit") {
-        await editTodo(task);
+        await putTodo(task);
         setSaveLoading(false);
         setOpenEdit(false);
       }

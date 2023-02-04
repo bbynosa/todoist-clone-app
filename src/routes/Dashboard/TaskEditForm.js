@@ -1,4 +1,7 @@
+// React Imports
 import * as React from "react";
+
+// Material UI Imports
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -15,13 +18,20 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
+
+// Utils Imports
 import { v4 as uuidv4 } from "uuid";
-import axios from "../../api/axios";
+
+// Component Imports
 import Spinner from "../../components/Spinner";
 import LoadingButton from "@mui/lab/LoadingButton";
 
-const status = ["Not started", "In progress", "Completed"];
-const priorities = ["Urgent", "Important", "Medium", "Low"];
+// API Imports
+import { getStatus, getPriorities, getTodo } from "../../api";
+
+const status = getStatus();
+const priorities = getPriorities();
+
 const initialState = {
   id: "",
   name: "",
@@ -46,12 +56,12 @@ export default function TaskEditForm({
 
   React.useEffect(() => {
     if (id) {
-      getTodo(id);
+      getTask(id);
     }
   }, []);
 
-  const getTodo = async (id) => {
-    const { data } = await axios.get(`/todos/${id}`);
+  const getTask = async (id) => {
+    const data = await getTodo(id);
     setTask(data);
     setLoading(false);
   };

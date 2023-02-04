@@ -1,4 +1,7 @@
-import * as React from "react";
+// React Imports
+import { useState } from "react";
+
+// Material UI Imports
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -7,19 +10,24 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Link, Button } from "@mui/material";
-
 import {
   Select,
   MenuItem,
   FormControl,
   InputLabel
 } from "@mui/material";
+
+// Component Imports
 import InlineAdd from "./InlineAdd";
-import { useState } from "react"
+
+// Utils Imports
 import sortByProperty from "../../utils";
 
-const status = ["Not started", "In progress", "Completed"];
-const priorities = ["Urgent", "Important", "Medium", "Low"];
+// API Imports
+import { getStatus, getPriorities } from "../../api";
+
+const status = getStatus();
+const priorities = getPriorities();
 
 // Dictionary of fields that can be used to sort the tasks
 // Format is Field Name => Property Name

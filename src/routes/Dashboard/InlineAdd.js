@@ -1,4 +1,7 @@
+// React Imports
 import * as React from "react";
+
+// Material UI Imports
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -14,12 +17,19 @@ import {
   useThemeProps,
   TableCell,
 } from "@mui/material";
-import { v4 as uuidv4 } from "uuid";
-import Spinner from "../../components/Spinner";
 import { LoadingButton } from "@mui/lab";
 
-const status = ["Not started", "In progress", "Completed"];
-const priorities = ["Urgent", "Important", "Medium", "Low"];
+// Utility Imports
+import { v4 as uuidv4 } from "uuid";
+
+// Component Imports
+import Spinner from "../../components/Spinner";
+
+// API Imports
+import { getStatus, getPriorities } from "../../api";
+
+const status = getStatus();
+const priorities = getPriorities();
 
 const initialState = {
   id: "",
@@ -78,7 +88,7 @@ export default function InlineAdd({ saveTodo, formMode }) {
             onChange={handleChange}
           >
             {status.map((status) => (
-              <MenuItem value={status}>{status}</MenuItem>
+              <MenuItem key={status} value={status}>{status}</MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -95,7 +105,7 @@ export default function InlineAdd({ saveTodo, formMode }) {
             onChange={handleChange}
           >
             {priorities.map((priority) => (
-              <MenuItem value={priority}>{priority}</MenuItem>
+              <MenuItem key={priority} value={priority}>{priority}</MenuItem>
             ))}
           </Select>
         </FormControl>
