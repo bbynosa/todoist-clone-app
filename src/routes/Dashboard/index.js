@@ -84,23 +84,23 @@ export default function Dashboard() {
 
   const listTodos = async () => {
     setLoading(true);
-    const { data } = await axios.get("/todos");
+    const { data } = await axios.get("api/todos");
     setRows(data);
     setLoading(false);
   };
 
   const getTodo = async () => {
-    const { data } = await axios.get(`/todos/${selectedTaskId}`);
+    const { data } = await axios.get(`api/todos/${selectedTaskId}`);
     setSelectedTask(data);
   };
 
   const createTodo = async (data) => {
-    await axios.post("/todos", data);
+    await axios.post("api/todos", data);
   };
 
-  const editTodo = async (data) => await axios.put(`/todos/${data.id}`, data);
+  const editTodo = async (data) => await axios.put(`api/todos/${data.id}`, data);
 
-  const deleteTodo = async (id) => await axios.delete(`/todos/${id}`);
+  const deleteTodo = async (id) => await axios.delete(`api/todos/${id}`);
 
   const handleClickOpen = () => {
     setFormMode("add");
