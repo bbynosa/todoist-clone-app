@@ -51,7 +51,7 @@ export default function TaskEditForm({
   }, []);
 
   const getTodo = async (id) => {
-    const { data } = await axios.get(`/todos/${id}`);
+    const { data } = await axios.get(`api/tasks/${id}`);
     setTask(data);
     setLoading(false);
   };

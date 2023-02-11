@@ -170,7 +170,7 @@ export default function Dashboard() {
       ) : (
         <Spinner />
       )}
-      {open && (
+      {/* {open && (
         <TaskForm
           open={open}
           handleClose={handleClose}
@@ -178,7 +178,7 @@ export default function Dashboard() {
           data={selectedTask}
           loading={saveLoading}
         />
-      )}
+      )} */}
 
       {openEdit && (
         <TaskEditForm
@@ -187,7 +187,7 @@ export default function Dashboard() {
           id={selectedTaskId}
           saveTask={saveTodo}
           saveLoading={saveLoading}
-        />
+        /> 
       )}
     </div>
   );
