@@ -115,7 +115,7 @@ export default function TaskList({
           {rows.length ? (
             rows.map((row) => (
               <>
-                <TaskListItem row={row} />
+                <TaskListItem row={row} key={row.id} />
                 <Divider />
               </>
             ))

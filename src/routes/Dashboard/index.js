@@ -21,7 +21,6 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 
-
 export default function Dashboard() {
   const [openEdit, setOpenEdit] = useState(false);
   const [rows, setRows] = useState([]);
@@ -29,6 +28,8 @@ export default function Dashboard() {
   const [formMode, setFormMode] = useState("");
   const [loading, setLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
+  const [selectedTask, setSelectedTask] = useState({});
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -49,6 +50,7 @@ export default function Dashboard() {
   }, [selectedTaskId]);
 
   const listTodos = async () => {
+    // TODO: Fix invoking list tasks API twice
     setLoading(true);
     const { data } = await axios.get("api/tasks");
     setRows(data);
