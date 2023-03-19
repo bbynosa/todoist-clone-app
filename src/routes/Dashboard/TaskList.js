@@ -91,27 +91,37 @@ export default function TaskList({
 
   // Render UI
   return (
-    <>
-      <Grid container paddingTop="50px">
-        <Grid item md={4} paddingLeft="90px">
-          <Typography variant="h5" component="h1" sx={{ fontWeight: "bold" }}>
-            Inbox
-          </Typography>
-        </Grid>
-        <Grid item md={8}>
-          <ButtonGroup>
-            <Button>
-              <CommentIcon />
-            </Button>
-            <Button>
-              <ViewIcon />
-            </Button>
-            <Button>
-              <OpenMoreIcon />
-            </Button>
-          </ButtonGroup>
-        </Grid>
-        <List sx={style}>
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell variant="head">Name</TableCell>
+            <TableCell variant="head" align="left">Status</TableCell>
+            <TableCell variant="head" align="left">Priority</TableCell>
+            <TableCell variant="head" align="left">Assigned to</TableCell>
+            <TableCell>
+              <FormControl fullWidth>
+                <InputLabel id="sort-by-label">Sort By</InputLabel>
+                <Select
+                  labelId="sort-by-label"
+                  label="Sort By"
+                  value={sortField}
+                  onChange={handleSortChange}
+                >
+                  {Object.keys(sortFields).map((sortField) => (
+                    <MenuItem key={sortField} value={sortField}>{sortField}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            {/* TODO: Avoid prop drilling. Maybe time to use redux or context */}
+            { /* InlineAdd saveTodo={saveTodo} formMode={formMode} /> */ }
+          </TableRow>
+          {/* TODO: New todo should be first on the list. We can do this by sorting by created_date */}
           {rows.length ? (
             rows.map((row) => (
               <>
