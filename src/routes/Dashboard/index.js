@@ -6,56 +6,23 @@ import TaskEditForm from "./TaskEditForm";
 import { Grid, Paper, Typography } from "@mui/material";
 import axios from "../../api/axios";
 import Spinner from "../../components/Spinner";
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import CssBaseline from "@mui/material/CssBaseline";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import MailIcon from "@mui/icons-material/Mail";
 
-// Component 
+// Local components
 import AddTaskForm from "./AddTaskForm";
-
-function createData(id, name, status, priority, notes, createdBy, assignedTo) {
-  return { id, name, status, priority, notes, createdBy, assignedTo };
-}
-
-const seedData = [
-  createData(
-    "Feed dogs",
-    "In Progress",
-    "Medium",
-    "lorem ipsum",
-    "Bruce",
-    "Bruce"
-  ),
-  createData(
-    "Clean house",
-    "In Progress",
-    "Medium",
-    "lorem ipsum",
-    "Bruce",
-    "Snowy"
-  ),
-  createData(
-    "Water plants",
-    "Not started",
-    "Low",
-    "lorem ipsum",
-    "Bruce",
-    "Papsy"
-  ),
-  createData(
-    "Wash dishes",
-    "Completed",
-    "Urgent",
-    "lorem ipsum",
-    "Bruce",
-    "Bruce"
-  ),
-  createData(
-    "Buy food",
-    "In Progress",
-    "Medium",
-    "lorem ipsum",
-    "Bruce",
-    "Bruce"
-  ),
-];
 
 export default function Dashboard() {
   const [openEdit, setOpenEdit] = useState(false);
@@ -115,8 +82,6 @@ export default function Dashboard() {
   const saveTodo = async (task) => {
     try {
       setSaveLoading(true);
-      console.log(formMode);
-      console.log("Task:", task);
       if (formMode === "add") {
         await createTodo(task);
         setSaveLoading(false);
@@ -162,37 +127,54 @@ export default function Dashboard() {
 
   return (
     <div>
-      {/* <Button variant="contained" onClick={handleClickOpen}>
-        Add a task
-      </Button> */}
-      {!loading ? (
-        <TaskList
-          rows={rows}
-          selectTask={selectTask}
-          deleteTask={deleteTask}
-          saveTodo={saveTodo}
-          formMode={handleFormMode}
-          setRows={setRows}
-        />
-      ) : (
-        <Spinner />
-      )}
-
-      <AddTaskForm
-        saveTodo={saveTodo}
-        formMode={handleFormMode}
-      />
-
-      {/* {open && (
-        <TaskForm
-          open={open}
-          handleClose={handleClose}
-          saveTask={saveTodo}
-          data={selectedTask}
-          loading={saveLoading}
-        />
-      )} */}
-
+      <Grid container spacing={2}>
+        <Grid item md={3}>
+          <Paper>
+            <List>
+              {["Inbox", "Starred", "Send email", "Drafts"].map(
+                (text, index) => (
+                  <ListItem key={text} disablePadding>
+                    <ListItemButton>
+                      <ListItemIcon>
+                        {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                      </ListItemIcon>
+                      <ListItemText primary={text} />
+                    </ListItemButton>
+                  </ListItem>
+                )
+              )}
+            </List>
+            <Divider />
+            <List>
+              {["All mail", "Trash", "Spam"].map((text, index) => (
+                <ListItem key={text} disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    </ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </Paper>
+        </Grid>
+        <Grid item md={9}>
+          {!loading ? (
+            <TaskList
+              rows={rows}
+              selectTask={selectTask}
+              deleteTask={deleteTask}
+              saveTodo={saveTodo}
+              formMode={handleFormMode}
+              setRows={setRows}
+            />
+          ) : (
+            <Spinner />
+          )}
+          <AddTaskForm saveTodo={saveTodo} formMode={setFormMode} />
+        </Grid>
+      </Grid>
       {openEdit && (
         <TaskEditForm
           open={openEdit}
