@@ -25,6 +25,7 @@ const emptyTask = {
 
 // Component definition
 export default function InlineTaskForm({ taskToEdit, onCancel, onSave }) {
+  const isAdd = !taskToEdit;
   const [draftTask, setDraftTask] = React.useState({ ...(taskToEdit || emptyTask) });
 
   // Define validation
@@ -72,12 +73,6 @@ export default function InlineTaskForm({ taskToEdit, onCancel, onSave }) {
     }
    */
 
-  // #999999 - border 
-
-  // Is this the best way?
-  // TODO: Replace with CSS 
-  const [formFocus, setFormFocus] = React.useState(false);
-
   // Priority styles
   const priorities = [
     {
@@ -106,13 +101,17 @@ export default function InlineTaskForm({ taskToEdit, onCancel, onSave }) {
   return (
     <mui.Box pl={11} py={1} pr={2}>
       <mui.Box sx={{
-        border: `1px solid ${formFocus ? '#999' : '#eee'}`,
-        borderRadius: '10px'
+        //border: `1px solid ${formFocus ? '#999' : '#eee'}`,
+        border: '1px solid #eee',
+        borderRadius: '10px',
+        
+        // Credits to https://stackoverflow.com/questions/24287192/css-change-parent-on-focus-of-child
+        ':focus-within': {
+          border: '1px solid #999'
+        }
       }} p={0}>
         <mui.FormControl fullWidth sx={{ p: 1 }}>
           <mui.TextField
-            onFocus={() => setFormFocus(true)}
-            onBlur={() => setFormFocus(false)}
             autoFocus
             fullWidth
             type="text"
@@ -131,8 +130,6 @@ export default function InlineTaskForm({ taskToEdit, onCancel, onSave }) {
             }}
           />
           <mui.TextField
-            onFocus={() => setFormFocus(true)}
-            onBlur={() => setFormFocus(false)}
             multiline
             fullWidth
             type="text"
@@ -155,8 +152,6 @@ export default function InlineTaskForm({ taskToEdit, onCancel, onSave }) {
           />
           <mui.Grid my={1} justifyContent="flex-start" container>
             <mui.TextField
-              onFocus={() => setFormFocus(true)}
-              onBlur={() => setFormFocus(false)}
               type="date"
               placeholder="Due Date"
               name="due_date"
@@ -178,8 +173,6 @@ export default function InlineTaskForm({ taskToEdit, onCancel, onSave }) {
               }}
             />
             <mui.Select
-              onFocus={() => setFormFocus(true)}
-              onBlur={() => setFormFocus(false)}
               label="Priority"
               name="priority"
               onChange={handleOnChange}
@@ -248,7 +241,7 @@ export default function InlineTaskForm({ taskToEdit, onCancel, onSave }) {
               }
             }}
           >
-            Add Task
+            {isAdd ? 'Add Task' : 'Save'}
           </mui.Button>
         </mui.Grid>
       </mui.Box>
