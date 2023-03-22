@@ -5,8 +5,6 @@ import * as React from "react";
 import * as mui from '@mui/material';
 
 // Icon imports
-//import { ReactComponent as AddIcon } from "../../icons/icon_add.svg";
-//import { ReactComponent as DateIcon } from "../../icons/icon_date.svg"; FIXME: For custom date picker
 import { ReactComponent as PriorityIcon } from "../../icons/icon_priority.svg";
 import { ReactComponent as PriorityIconFill } from "../../icons/icon_priority_fill.svg";
 
@@ -58,21 +56,6 @@ export default function InlineTaskForm({ taskToEdit, onCancel, onSave }) {
     });
   }
 
-  /**
-   * Task Format
-   * {
-        "author": "40edeec4-8a93-4d19-bcf7-9241d23cccfb",
-        "created_at": "Sat, 21 Jan 2023 09:23:23 GMT",
-        "description": "Lorem ipsum",
-        "due_date": "Wed, 15 Feb 2023 09:23:23 GMT",
-        "id": "2e318ea2-575a-49b2-ba71-32bbcd928146",
-        "is_complete": false,
-        "name": "Feed dogs",
-        "priority": 2,    (1, 2, 3, 4)
-        "updated_at": "Mon, 23 Jan 2023 09:23:23 GMT"
-    }
-   */
-
   // Priority styles
   const priorities = [
     {
@@ -101,10 +84,9 @@ export default function InlineTaskForm({ taskToEdit, onCancel, onSave }) {
   return (
     <mui.Box pl={11} py={1} pr={2}>
       <mui.Box sx={{
-        //border: `1px solid ${formFocus ? '#999' : '#eee'}`,
         border: '1px solid #eee',
         borderRadius: '10px',
-        
+
         // Credits to https://stackoverflow.com/questions/24287192/css-change-parent-on-focus-of-child
         ':focus-within': {
           border: '1px solid #999'
@@ -191,7 +173,6 @@ export default function InlineTaskForm({ taskToEdit, onCancel, onSave }) {
                 }
               }}
             >
-              {/* 1: #d1453b */}
               {priorities.map(({ value, icon, color }) =>
                 <mui.MenuItem key={value} value={value}>
                   {React.createElement(icon, { style: { marginRight: '4px', verticalAlign: 'middle', color: color } })}
