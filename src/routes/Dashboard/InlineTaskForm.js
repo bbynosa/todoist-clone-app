@@ -8,6 +8,9 @@ import * as mui from '@mui/material';
 import { ReactComponent as PriorityIcon } from "../../icons/icon_priority.svg";
 import { ReactComponent as PriorityIconFill } from "../../icons/icon_priority_fill.svg";
 
+// Component imports
+import DateField from '../../components/DateField';
+
 // Global constants
 const emptyTask = {
   id: "",
@@ -180,6 +183,15 @@ export default function InlineTaskForm({ taskToEdit, onCancel, onSave }) {
                 </mui.MenuItem>
               )}
             </mui.Select>
+            <DateField 
+              placeholder="Due date"
+              name="due_date"
+              sx={{
+                '&': {
+                  color: 'red'
+                }
+              }}
+              />
           </mui.Grid>
         </mui.FormControl>
         {/* https://stackoverflow.com/questions/45159071/mui-how-to-align-a-component-to-the-center-right */}
