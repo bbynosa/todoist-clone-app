@@ -19,6 +19,8 @@ import {
   ButtonGroup,
   Typography,
   Grid,
+  ButtonBase,
+  Box,
 } from "@mui/material";
 
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
@@ -68,6 +70,8 @@ export default function TaskList({
   saveTodo,
   formMode,
   setRows,
+  openTaskModal,
+  setSelectedTaskId,
 }) {
   // Define state variables
   const [sortField, setSortField] = useState("Default");
@@ -87,6 +91,11 @@ export default function TaskList({
         ? sortByProperty(rows, propertyName, sortFieldTransform[value])
         : sortByProperty(rows, propertyName)
     );
+  };
+
+  const handleTaskModalOpen = (taskId) => {
+    console.log("handleTaskModalOpen()");
+    setSelectedTaskId(taskId);
   };
 
   // Render UI
@@ -115,7 +124,9 @@ export default function TaskList({
           {rows.length ? (
             rows.map((row) => (
               <>
-                <TaskListItem row={row} key={row.id} />
+                <ButtonBase onClick={() => handleTaskModalOpen(row.id)}>
+                  <TaskListItem row={row} key={row.id} />
+                </ButtonBase>
                 <Divider />
               </>
             ))

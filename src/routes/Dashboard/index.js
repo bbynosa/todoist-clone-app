@@ -20,6 +20,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
+import TaskViewEditModal from "./TaskViewEditModal";
 
 export default function Dashboard() {
   const [openEdit, setOpenEdit] = useState(false);
@@ -31,6 +32,8 @@ export default function Dashboard() {
   const [selectedTask, setSelectedTask] = useState({});
   const [open, setOpen] = useState(false);
 
+  const [taskModalOpen, setTaskModalOpen] = useState(false);
+
   useEffect(() => {
     try {
       listTodos();
@@ -39,15 +42,15 @@ export default function Dashboard() {
     }
   }, []);
 
-  useEffect(() => {
-    try {
-      if (selectedTaskId) {
-        getTodo();
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }, [selectedTaskId]);
+  // useEffect(() => {
+  //   try {
+  //     if (selectedTaskId) {
+  //       getTodo();
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }, [selectedTaskId]);
 
   const listTodos = async () => {
     // TODO: Fix invoking list tasks API twice
@@ -95,9 +98,9 @@ export default function Dashboard() {
   };
 
   const selectTask = (taskId) => {
+    console.log('selectTask()')
     setSelectedTaskId(taskId);
-    setFormMode("edit");
-    setOpenEdit(true);
+    setTaskModalOpen(true);
   };
 
   const handleClose = () => {
@@ -120,6 +123,13 @@ export default function Dashboard() {
 
   const handleFormMode = (mode) => {
     setFormMode(mode);
+  };
+
+  // const openTaskModal = () => setTaskModalOpen(true);
+
+  const closeTaskModal = () => {
+    console.log("closetaskmodal()");
+    setTaskModalOpen(false);
   };
 
   return (
@@ -160,11 +170,12 @@ export default function Dashboard() {
           {!loading ? (
             <TaskList
               rows={rows}
-              selectTask={selectTask}
+              // selectTask={selectTask}
               deleteTask={deleteTask}
               saveTodo={saveTodo}
               formMode={handleFormMode}
               setRows={setRows}
+              setSelectedTaskId={selectTask}
             />
           ) : (
             <Spinner />
@@ -180,6 +191,13 @@ export default function Dashboard() {
           saveLoading={saveLoading}
         />
       )}
+      {/* {taskModalOpen && ( */}
+      <TaskViewEditModal
+        open={taskModalOpen}
+        closeTaskModal={closeTaskModal}
+        selectedTaskId={selectedTaskId}
+      />
+      {/* )} */}
     </div>
   );
 }
