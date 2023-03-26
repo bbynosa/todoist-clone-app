@@ -22,6 +22,9 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import TaskViewEditModal from "./TaskViewEditModal";
 
+// Local components
+import AddTaskForm from "./AddTaskForm";
+
 export default function Dashboard() {
   const [openEdit, setOpenEdit] = useState(false);
   const [rows, setRows] = useState([]);
@@ -180,6 +183,7 @@ export default function Dashboard() {
           ) : (
             <Spinner />
           )}
+          <AddTaskForm saveTodo={saveTodo} formMode={setFormMode} />
         </Grid>
       </Grid>
       {openEdit && (
