@@ -138,7 +138,7 @@ export default function Dashboard() {
   return (
     <div>
       <Grid container spacing={2}>
-        <Grid item md={3}>
+        <Grid item xs={3}>
           <Paper>
             <List>
               {["Inbox", "Starred", "Send email", "Drafts"].map(
@@ -169,7 +169,7 @@ export default function Dashboard() {
             </List>
           </Paper>
         </Grid>
-        <Grid item md={9}>
+        <Grid item xs={9}>
           {!loading ? (
             <TaskList
               rows={rows}

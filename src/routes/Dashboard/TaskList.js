@@ -101,14 +101,24 @@ export default function TaskList({
   // Render UI
   return (
     <>
-      <Grid container paddingTop="50px">
-        <Grid item md={4} paddingLeft="90px">
+      <Grid container paddingTop="50px" paddingRight="30px">
+        <Grid item md={4} paddingLeft="75px">
           <Typography variant="h5" component="h1" sx={{ fontWeight: "bold" }}>
             Inbox
           </Typography>
         </Grid>
-        <Grid item md={8}>
-          <ButtonGroup>
+        <Grid item md={8} container justifyContent="flex-end">
+          <ButtonGroup
+            variant="text"
+            style={{
+              button: {
+                border: "none!important",
+              },
+              "button:hover": {
+                backgroundColor: "transparent",
+              },
+            }}
+          >
             <Button>
               <CommentIcon />
             </Button>
@@ -120,20 +130,25 @@ export default function TaskList({
             </Button>
           </ButtonGroup>
         </Grid>
-        <List sx={style}>
-          {rows.length ? (
-            rows.map((row) => (
-              <>
-                <ButtonBase onClick={() => handleTaskModalOpen(row.id)}>
-                  <TaskListItem row={row} key={row.id} />
-                </ButtonBase>
-                <Divider />
-              </>
-            ))
-          ) : (
-            <Spinner />
-          )}
-        </List>
+        <Grid item md={12}>
+          <List>
+            {rows.length ? (
+              rows.map((row) => (
+                <>
+                  <ButtonBase
+                    onClick={() => handleTaskModalOpen(row.id)}
+                    style={{ width: "100%" }}
+                  >
+                    <TaskListItem row={row} key={row.id} />
+                  </ButtonBase>
+                  <Divider />
+                </>
+              ))
+            ) : (
+              <Spinner />
+            )}
+          </List>
+        </Grid>
       </Grid>
     </>
   );
