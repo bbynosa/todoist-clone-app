@@ -74,30 +74,6 @@ export default function TaskViewEditModal({
     minWidth: "10px",
   };
 
-  // Priority styles
-  const priorities = [
-    {
-      value: 1,
-      icon: PriorityIconFill,
-      color: "#d1453b",
-    },
-    {
-      value: 2,
-      icon: PriorityIconFill,
-      color: "#EB8909",
-    },
-    {
-      value: 3,
-      icon: PriorityIconFill,
-      color: "#246FE0",
-    },
-    {
-      value: 4,
-      icon: PriorityIcon,
-      color: "#666666",
-    },
-  ];
-
   const priorityIconColors = [
     {
       value: 1,
