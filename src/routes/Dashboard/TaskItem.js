@@ -56,16 +56,28 @@ export default function TaskListItem({ row }) {
         icon={<CircleOutlined />}
         checkedIcon={<CheckCircleOutlineIcon color="disabled" />}
       />
-      <ListItemText primary={row.name} secondary={<div>{(row.description || "").split('\n').map(l => (<div>{l}</div>))}</div>}/>
-      <ButtonGroup variant="text" sx={{
+      <ListItemText
+        primary={row.name}
+        secondary={
+          <div>
+            {(row.description || "").split("\n").map((l) => (
+              <div>{l}</div>
+            ))}
+          </div>
+        }
+      />
+      <ButtonGroup
+        variant="text"
+        sx={{
           ...taskButtonVisibility,
-          'button': {
-            border: 'none!important'
+          button: {
+            border: "none!important",
           },
-          'button:hover': {
-            backgroundColor: 'transparent'
-          }
-        }}>
+          "button:hover": {
+            backgroundColor: "transparent",
+          },
+        }}
+      >
         <Button>
           <EditIcon />
         </Button>
