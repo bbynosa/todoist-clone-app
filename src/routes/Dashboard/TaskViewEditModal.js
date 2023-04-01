@@ -51,7 +51,7 @@ export default function TaskViewEditModal({
     setLoading(false);
   };
 
-  const close = () => closeTaskModal();
+  const handleClose = () => closeTaskModal();
 
   const headerButtonStyle = {
     p: "2px",
@@ -92,7 +92,7 @@ export default function TaskViewEditModal({
       PaperProps={{
         sx: { minHeight: "90%", width: "864px", maxWidth: "100%" },
       }}
-      onClose={close}
+      onClose={handleClose}
     >
       <Mui.DialogContent>
         {!loading ? (
@@ -122,7 +122,7 @@ export default function TaskViewEditModal({
                 <Mui.Button sx={headerButtonStyle}>
                   <MenuIcon />
                 </Mui.Button>
-                <Mui.Button sx={headerButtonStyle} onClick={() => close()}>
+                <Mui.Button sx={headerButtonStyle} onClick={() => handleClose()}>
                   <CloseIcon />
                 </Mui.Button>
               </Mui.Grid>
