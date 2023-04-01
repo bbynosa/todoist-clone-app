@@ -1,22 +1,10 @@
-import { useEffect, useState, createElement } from "react";
+import * as React from "react";
+
 import api from "../../api/axios";
 
 import Spinner from "../../components/Spinner";
-import { TaskRounded } from "@mui/icons-material";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Grid,
-  Typography,
-  Divider,
-  Box,
-  TextField,
-  Checkbox,
-} from "@mui/material";
+
+import * as Mui from "@mui/material";
 
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { CircleOutlined } from "@mui/icons-material";
@@ -32,17 +20,16 @@ import { ReactComponent as MenuIcon } from "../../icons/TaskEditModal/menu.svg";
 import { ReactComponent as CloseIcon } from "../../icons/TaskEditModal/close.svg";
 
 import { ReactComponent as PriorityIcon } from "../../icons/icon_priority.svg";
-import { ReactComponent as PriorityIconFill } from "../../icons/icon_priority_fill.svg";
 
 export default function TaskViewEditModal({
   open,
   closeTaskModal,
   selectedTaskId,
 }) {
-  const [task, setTask] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [task, setTask] = React.useState({});
+  const [loading, setLoading] = React.useState(true);
 
-  useEffect(() => {
+  React.useEffect(() => {
     async function getTask() {
       await getTaskFromApi(selectedTaskId);
     }
@@ -53,11 +40,12 @@ export default function TaskViewEditModal({
   const getTaskFromApi = async (taskId) => {
     const { data } = await api.get(`/api/tasks/${taskId}`);
 
+    //get name of month from Date():https://stackoverflow.com/questions/1643320/get-month-name-from-date
     const dueDate = new Date(data.due_date);
     data.due_date_day = dueDate.getDay();
     data.due_date_month_name = dueDate
       .toLocaleString("default", { month: "long" })
-      .substring(0, 3); //get name of month from Date():https://stackoverflow.com/questions/1643320/get-month-name-from-date
+      .substring(0, 3);
 
     setTask(data);
     setLoading(false);
@@ -98,7 +86,7 @@ export default function TaskViewEditModal({
   ];
 
   return (
-    <Dialog
+    <Mui.Dialog
       open={open}
       // Set dimensions of dialog, from: https://stackoverflow.com/questions/47698037/how-can-i-set-a-height-to-a-dialog-in-material-ui
       PaperProps={{
@@ -106,60 +94,65 @@ export default function TaskViewEditModal({
       }}
       onClose={close}
     >
-      <DialogContent>
+      <Mui.DialogContent>
         {!loading ? (
-          <Grid container>
-            <Grid container paddingBottom={2}>
-              <Grid
+          <Mui.Grid container>
+            <Mui.Grid container paddingBottom={2}>
+              <Mui.Grid
                 item
                 container
                 xs={6}
                 justifyContent="flex-start"
                 padding-vi
               >
-                <DialogContentText>
-                  <InboxIcon style={{ color: "#246fe0", paddingRight: "10px" }} />
+                <Mui.DialogContentText>
+                  <InboxIcon
+                    style={{ color: "#246fe0", paddingRight: "10px" }}
+                  />
                   Inbox
-                </DialogContentText>
-              </Grid>
-              <Grid item container xs={6} justifyContent="flex-end">
-                <Button sx={headerButtonStyle}>
+                </Mui.DialogContentText>
+              </Mui.Grid>
+              <Mui.Grid item container xs={6} justifyContent="flex-end">
+                <Mui.Button sx={headerButtonStyle}>
                   <MoveUpIcon />
-                </Button>
-                <Button sx={headerButtonStyle}>
+                </Mui.Button>
+                <Mui.Button sx={headerButtonStyle}>
                   <MoveDownIcon />
-                </Button>
-                <Button sx={headerButtonStyle}>
+                </Mui.Button>
+                <Mui.Button sx={headerButtonStyle}>
                   <MenuIcon />
-                </Button>
-                <Button sx={headerButtonStyle} onClick={() => close()}>
+                </Mui.Button>
+                <Mui.Button sx={headerButtonStyle} onClick={() => close()}>
                   <CloseIcon />
-                </Button>
-              </Grid>
-            </Grid>
-            <Grid container sx={{ borderTop: "1px solid #eee", paddingTop: 2 }}>
-              <Grid item xs={8}>
-                <Grid container>
-                  <Grid item xs={1}>
-                    <Checkbox
+                </Mui.Button>
+              </Mui.Grid>
+            </Mui.Grid>
+            <Mui.Grid
+              container
+              sx={{ borderTop: "1px solid #eee", paddingTop: 2 }}
+            >
+              <Mui.Grid item xs={8}>
+                <Mui.Grid container>
+                  <Mui.Grid item xs={1}>
+                    <Mui.Checkbox
                       icon={<CircleOutlined />}
                       checkedIcon={<CheckCircleOutlineIcon color="disabled" />}
                     />
-                  </Grid>
-                  <Grid item xs={11} paddingLeft="10px" paddingRight="25px">
-                    <Grid paddingBottom="15px">
-                      <DialogContentText
+                  </Mui.Grid>
+                  <Mui.Grid item xs={11} paddingLeft="10px" paddingRight="25px">
+                    <Mui.Grid paddingBottom="15px">
+                      <Mui.DialogContentText
                         fontWeight="bold"
                         fontSize="20px"
                         color="black"
                         paddingBottom="15px"
                       >
                         {task.name}
-                      </DialogContentText>
-                      <DialogContentText paddingBottom="30px">
+                      </Mui.DialogContentText>
+                      <Mui.DialogContentText paddingBottom="30px">
                         {task.description}
-                      </DialogContentText>
-                      <Button
+                      </Mui.DialogContentText>
+                      <Mui.Button
                         sx={{
                           color: "gray",
                           textTransform: "none",
@@ -173,18 +166,18 @@ export default function TaskViewEditModal({
                         }}
                       >
                         + Add sub-task
-                      </Button>
-                    </Grid>
-                    <Grid
+                      </Mui.Button>
+                    </Mui.Grid>
+                    <Mui.Grid
                       container
                       sx={{ borderTop: "1px solid #eee" }}
                       paddingTop="20px"
                     >
-                      <Grid item xs={1}>
+                      <Mui.Grid item xs={1}>
                         <UserIcon />
-                      </Grid>
-                      <Grid item xs={11}>
-                        <Box
+                      </Mui.Grid>
+                      <Mui.Grid item xs={11}>
+                        <Mui.Box
                           sx={{
                             border: "1px solid #eee",
                             borderRadius: "10px",
@@ -194,14 +187,13 @@ export default function TaskViewEditModal({
                             },
                           }}
                         >
-                          <TextField
+                          <Mui.TextField
                             autoFocus
                             type="text"
                             placeholder="Comment"
                             name="comment"
                             sx={{
                               input: {
-                                // fontWeight: "bold",
                                 padding: "2px",
                               },
                               fieldset: {
@@ -209,54 +201,54 @@ export default function TaskViewEditModal({
                               },
                             }}
                           />
-                        </Box>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid container item xs={4} direction="column" spacing={2}>
-                <Grid item container direction="column" spacing={1}>
-                  <Grid item>
-                    <DialogContentText>Project</DialogContentText>
-                  </Grid>
-                  <Grid item>
-                    <DialogContentText>
+                        </Mui.Box>
+                      </Mui.Grid>
+                    </Mui.Grid>
+                  </Mui.Grid>
+                </Mui.Grid>
+              </Mui.Grid>
+              <Mui.Grid container item xs={4} direction="column" spacing={2}>
+                <Mui.Grid item container direction="column" spacing={1}>
+                  <Mui.Grid item>
+                    <Mui.DialogContentText>Project</Mui.DialogContentText>
+                  </Mui.Grid>
+                  <Mui.Grid item>
+                    <Mui.DialogContentText>
                       <InboxIcon
                         style={{ color: "#246fe0", paddingRight: 10 }}
                       />
                       Inbox
-                    </DialogContentText>
-                  </Grid>
-                </Grid>
-                <Grid item container direction="column" spacing={1}>
-                  <Grid item>
-                    <DialogContentText
+                    </Mui.DialogContentText>
+                  </Mui.Grid>
+                </Mui.Grid>
+                <Mui.Grid item container direction="column" spacing={1}>
+                  <Mui.Grid item>
+                    <Mui.DialogContentText
                       sx={{ borderTop: "1px solid #eee", paddingTop: "10px" }}
                     >
                       Due date
-                    </DialogContentText>
-                  </Grid>
-                  <Grid item>
-                    <DialogContentText>
+                    </Mui.DialogContentText>
+                  </Mui.Grid>
+                  <Mui.Grid item>
+                    <Mui.DialogContentText>
                       {/* TODO: Date icon color should be dependent on the date? i.e. 1 color for "past due date", 1 color for "next week", etc. See todoist implementation  */}
                       <DateIcon
                         style={{ color: "#d1453b", paddingRight: 10 }}
                       />
                       {task.due_date_day} {task.due_date_month_name}
-                    </DialogContentText>
-                  </Grid>
-                </Grid>
-                <Grid item container direction="column" spacing={1}>
-                  <Grid item>
-                    <DialogContentText
+                    </Mui.DialogContentText>
+                  </Mui.Grid>
+                </Mui.Grid>
+                <Mui.Grid item container direction="column" spacing={1}>
+                  <Mui.Grid item>
+                    <Mui.DialogContentText
                       sx={{ borderTop: "1px solid #eee", paddingTop: "10px" }}
                     >
                       Priority
-                    </DialogContentText>
-                  </Grid>
-                  <Grid item>
-                    <DialogContentText>
+                    </Mui.DialogContentText>
+                  </Mui.Grid>
+                  <Mui.Grid item>
+                    <Mui.DialogContentText>
                       {task.priority !== 4 ? (
                         <FlagIcon
                           style={{
@@ -277,35 +269,40 @@ export default function TaskViewEditModal({
                         />
                       )}
                       P{task.priority}
-                    </DialogContentText>
-                  </Grid>
-                </Grid>
-                <Grid item container direction="column" spacing={1}>
-                  <Grid item>
-                    <DialogContentText
+                    </Mui.DialogContentText>
+                  </Mui.Grid>
+                </Mui.Grid>
+                <Mui.Grid item container direction="column" spacing={1}>
+                  <Mui.Grid item>
+                    <Mui.DialogContentText
                       sx={{
                         borderTop: "1px solid #eee",
                         paddingTop: "10px",
                       }}
                     >
-                      <Grid container>
-                        <Grid item xs={8}>
+                      <Mui.Grid container>
+                        <Mui.Grid item xs={8}>
                           Labels
-                        </Grid>
-                        <Grid item container xs={4} justifyContent="flex-end">
+                        </Mui.Grid>
+                        <Mui.Grid
+                          item
+                          container
+                          xs={4}
+                          justifyContent="flex-end"
+                        >
                           <PlusIcon />
-                        </Grid>
-                      </Grid>
-                    </DialogContentText>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
+                        </Mui.Grid>
+                      </Mui.Grid>
+                    </Mui.DialogContentText>
+                  </Mui.Grid>
+                </Mui.Grid>
+              </Mui.Grid>
+            </Mui.Grid>
+          </Mui.Grid>
         ) : (
           <Spinner />
         )}
-      </DialogContent>
-    </Dialog>
+      </Mui.DialogContent>
+    </Mui.Dialog>
   );
 }
