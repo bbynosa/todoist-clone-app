@@ -11,6 +11,7 @@ import {
   Radio,
   ButtonGroup,
   Checkbox,
+  Grid,
 } from "@mui/material";
 
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
@@ -45,40 +46,59 @@ export default function TaskListItem({ row }) {
 
   return (
     <ListItem
+      disablePadding={true}
       key={row.id}
       onMouseEnter={() => setShowTaskButtons(true)}
       onMouseLeave={() => setShowTaskButtons(false)}
     >
-      <Button sx={taskButtonVisibility}>
-        <DoubleVerticalMenuIcon />
-      </Button>
-      <Checkbox
-        icon={<CircleOutlined />}
-        checkedIcon={<CheckCircleOutlineIcon color="disabled" />}
-      />
-      <ListItemText primary={row.name} secondary={<div>{(row.description || "").split('\n').map(l => (<div>{l}</div>))}</div>}/>
-      <ButtonGroup variant="text" sx={{
-          ...taskButtonVisibility,
-          'button': {
-            border: 'none!important'
-          },
-          'button:hover': {
-            backgroundColor: 'transparent'
-          }
-        }}>
-        <Button>
-          <EditIcon />
-        </Button>
-        <Button>
-          <DateIcon />
-        </Button>
-        <Button>
-          <CommentIcon />
-        </Button>
-        <Button>
-          <HorizontalMenuIcon />
-        </Button>
-      </ButtonGroup>
+      <Grid container>
+        <Grid item xs={10} container>
+          <Button sx={taskButtonVisibility}>
+            <DoubleVerticalMenuIcon />
+          </Button>
+          <Checkbox
+            icon={<CircleOutlined />}
+            checkedIcon={<CheckCircleOutlineIcon color="disabled" />}
+          />
+          <ListItemText
+            primary={row.name}
+            secondary={
+              <div>
+                {(row.description || "").split("\n").map((l) => (
+                  <div>{l}</div>
+                ))}
+              </div>
+            }
+          />
+        </Grid>
+        <Grid item xs={2}>
+          <ButtonGroup
+            variant="text"
+            sx={{
+              ...taskButtonVisibility,
+              button: {
+                border: "none!important",
+              },
+              "button:hover": {
+                backgroundColor: "transparent",
+              },
+            }}
+          >
+            <Button>
+              <EditIcon />
+            </Button>
+            <Button>
+              <DateIcon />
+            </Button>
+            <Button>
+              <CommentIcon />
+            </Button>
+            <Button>
+              <HorizontalMenuIcon />
+            </Button>
+          </ButtonGroup>
+        </Grid>
+      </Grid>
     </ListItem>
   );
 }
