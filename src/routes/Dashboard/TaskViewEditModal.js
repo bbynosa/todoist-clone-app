@@ -15,7 +15,11 @@ import {
   Divider,
   Box,
   TextField,
+  Checkbox,
 } from "@mui/material";
+
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { CircleOutlined } from "@mui/icons-material";
 
 import { ReactComponent as InboxIcon } from "../../icons/TaskEditModal/inbox.svg";
 import { ReactComponent as UserIcon } from "../../icons/TaskEditModal/user.svg";
@@ -100,6 +104,7 @@ export default function TaskViewEditModal({
       PaperProps={{
         sx: { minHeight: "90%", width: "864px", maxWidth: "100%" },
       }}
+      onClose={close}
     >
       <DialogContent>
         {!loading ? (
@@ -113,7 +118,7 @@ export default function TaskViewEditModal({
                 padding-vi
               >
                 <DialogContentText>
-                  <InboxIcon style={{ color: "#246fe0" }} />
+                  <InboxIcon style={{ color: "#246fe0", paddingRight: "10px" }} />
                   Inbox
                 </DialogContentText>
               </Grid>
@@ -136,18 +141,24 @@ export default function TaskViewEditModal({
               <Grid item xs={8}>
                 <Grid container>
                   <Grid item xs={1}>
-                    <FlagIcon />
+                    <Checkbox
+                      icon={<CircleOutlined />}
+                      checkedIcon={<CheckCircleOutlineIcon color="disabled" />}
+                    />
                   </Grid>
-                  <Grid item xs={11}>
-                    <Grid>
+                  <Grid item xs={11} paddingLeft="10px" paddingRight="25px">
+                    <Grid paddingBottom="15px">
                       <DialogContentText
                         fontWeight="bold"
                         fontSize="20px"
                         color="black"
+                        paddingBottom="15px"
                       >
                         {task.name}
                       </DialogContentText>
-                      <DialogContentText>{task.description}</DialogContentText>
+                      <DialogContentText paddingBottom="30px">
+                        {task.description}
+                      </DialogContentText>
                       <Button
                         sx={{
                           color: "gray",
@@ -164,7 +175,11 @@ export default function TaskViewEditModal({
                         + Add sub-task
                       </Button>
                     </Grid>
-                    <Grid container sx={{ borderTop: "1px solid #eee" }}>
+                    <Grid
+                      container
+                      sx={{ borderTop: "1px solid #eee" }}
+                      paddingTop="20px"
+                    >
                       <Grid item xs={1}>
                         <UserIcon />
                       </Grid>
@@ -186,8 +201,8 @@ export default function TaskViewEditModal({
                             name="comment"
                             sx={{
                               input: {
-                                fontWeight: "bold",
-                                p: 0,
+                                // fontWeight: "bold",
+                                padding: "2px",
                               },
                               fieldset: {
                                 display: "none",
@@ -201,64 +216,88 @@ export default function TaskViewEditModal({
                 </Grid>
               </Grid>
               <Grid container item xs={4} direction="column" spacing={2}>
-                <Grid item>
-                  <DialogContentText>Project</DialogContentText>
-                  <DialogContentText>
-                    <InboxIcon style={{ color: "#246fe0", paddingRight: 10 }} />
-                    Inbox
-                  </DialogContentText>
-                </Grid>
-                <Grid item>
-                  <DialogContentText sx={{ borderTop: "1px solid #eee" }}>
-                    Due date
-                  </DialogContentText>
-                  <DialogContentText>
-                    <DateIcon style={{ color: "#d1453b", paddingRight: 10 }} />
-                    {task.due_date_day} {task.due_date_month_name}
-                  </DialogContentText>
-                </Grid>
-                <Grid item>
-                  <DialogContentText sx={{ borderTop: "1px solid #eee" }}>
-                    Priority
-                  </DialogContentText>
-                  <DialogContentText>
-                    {task.priority !== 4 ? (
-                      <FlagIcon
-                        style={{
-                          color: priorityIconColors.find(
-                            (x) => x.value === task.priority
-                          ).color,
-                          paddingRight: 10,
-                        }}
+                <Grid item container direction="column" spacing={1}>
+                  <Grid item>
+                    <DialogContentText>Project</DialogContentText>
+                  </Grid>
+                  <Grid item>
+                    <DialogContentText>
+                      <InboxIcon
+                        style={{ color: "#246fe0", paddingRight: 10 }}
                       />
-                    ) : (
-                      <PriorityIcon
-                        style={{
-                          color: priorityIconColors.find(
-                            (x) => x.value === task.priority
-                          ).color,
-                          paddingRight: 10,
-                        }}
-                      />
-                    )}
-                    P{task.priority}
-                  </DialogContentText>
+                      Inbox
+                    </DialogContentText>
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <DialogContentText
-                    sx={{
-                      borderTop: "1px solid #eee",
-                    }}
-                  >
-                    <Grid container>
-                      <Grid item xs={8}>
-                        Labels
+                <Grid item container direction="column" spacing={1}>
+                  <Grid item>
+                    <DialogContentText
+                      sx={{ borderTop: "1px solid #eee", paddingTop: "10px" }}
+                    >
+                      Due date
+                    </DialogContentText>
+                  </Grid>
+                  <Grid item>
+                    <DialogContentText>
+                      {/* TODO: Date icon color should be dependent on the date? i.e. 1 color for "past due date", 1 color for "next week", etc. See todoist implementation  */}
+                      <DateIcon
+                        style={{ color: "#d1453b", paddingRight: 10 }}
+                      />
+                      {task.due_date_day} {task.due_date_month_name}
+                    </DialogContentText>
+                  </Grid>
+                </Grid>
+                <Grid item container direction="column" spacing={1}>
+                  <Grid item>
+                    <DialogContentText
+                      sx={{ borderTop: "1px solid #eee", paddingTop: "10px" }}
+                    >
+                      Priority
+                    </DialogContentText>
+                  </Grid>
+                  <Grid item>
+                    <DialogContentText>
+                      {task.priority !== 4 ? (
+                        <FlagIcon
+                          style={{
+                            color: priorityIconColors.find(
+                              (x) => x.value === task.priority
+                            ).color,
+                            paddingRight: 10,
+                          }}
+                        />
+                      ) : (
+                        <PriorityIcon
+                          style={{
+                            color: priorityIconColors.find(
+                              (x) => x.value === task.priority
+                            ).color,
+                            paddingRight: 10,
+                          }}
+                        />
+                      )}
+                      P{task.priority}
+                    </DialogContentText>
+                  </Grid>
+                </Grid>
+                <Grid item container direction="column" spacing={1}>
+                  <Grid item>
+                    <DialogContentText
+                      sx={{
+                        borderTop: "1px solid #eee",
+                        paddingTop: "10px",
+                      }}
+                    >
+                      <Grid container>
+                        <Grid item xs={8}>
+                          Labels
+                        </Grid>
+                        <Grid item container xs={4} justifyContent="flex-end">
+                          <PlusIcon />
+                        </Grid>
                       </Grid>
-                      <Grid item container xs={4} justifyContent="flex-end">
-                        <PlusIcon />
-                      </Grid>
-                    </Grid>
-                  </DialogContentText>
+                    </DialogContentText>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
