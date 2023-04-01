@@ -155,7 +155,7 @@ export default function Dashboard() {
       )}
       <TaskViewEditModal
         open={taskModalOpen}
-        closeTaskModal={closeTaskModal}
+        onClose={closeTaskModal}
         selectedTaskId={selectedTaskId}
       />
     </div>

@@ -23,7 +23,7 @@ import { ReactComponent as PriorityIcon } from "../../icons/icon_priority.svg";
 
 export default function TaskViewEditModal({
   open,
-  closeTaskModal,
+  onClose,
   selectedTaskId,
 }) {
   const [task, setTask] = React.useState({});
@@ -51,7 +51,7 @@ export default function TaskViewEditModal({
     setLoading(false);
   };
 
-  const handleClose = () => closeTaskModal();
+  const handleClose = () => onClose();
 
   const headerButtonStyle = {
     p: "2px",
