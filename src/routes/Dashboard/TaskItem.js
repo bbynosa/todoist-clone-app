@@ -1,31 +1,9 @@
 import * as React from "react";
-import {
-  Link,
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
-  ListItemIcon,
-  ListItemButton,
-  Radio,
-  ButtonGroup,
-  Checkbox,
-  Grid,
-} from "@mui/material";
 
-import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
-import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
+import * as Mui from "@mui/material";
+
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CircleIcon from "@mui/icons-material/Circle";
-import CheckCircleTwoToneIcon from "@mui/icons-material/CheckCircleTwoTone";
-import CircleTwoToneIcon from "@mui/icons-material/CircleTwoTone";
-
-import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
-import InlineAdd from "./InlineAdd";
-import { useState } from "react";
-import sortByProperty from "../../utils";
+import { CircleOutlined } from "@mui/icons-material";
 
 // TODO: Can we please store these SVGs outside src/ dir, probably on public/ dir
 import { ReactComponent as EditIcon } from "../../icons/edit.svg";
@@ -34,33 +12,31 @@ import { ReactComponent as CommentIcon } from "../../icons/comment.svg";
 import { ReactComponent as HorizontalMenuIcon } from "../../icons/menu.svg";
 import { ReactComponent as DoubleVerticalMenuIcon } from "../../icons/double-vertical-menu.svg";
 
-import Spinner from "../../components/Spinner";
-import { CheckCircleOutline, CircleOutlined } from "@mui/icons-material";
 
 export default function TaskListItem({ row }) {
-  const [showTaskButtons, setShowTaskButtons] = useState(false);
+  const [showTaskButtons, setShowTaskButtons] = React.useState(false);
 
   const taskButtonVisibility = {
     visibility: showTaskButtons ? "visible" : "hidden",
   };
 
   return (
-    <ListItem
+    <Mui.ListItem
       disablePadding={true}
       key={row.id}
       onMouseEnter={() => setShowTaskButtons(true)}
       onMouseLeave={() => setShowTaskButtons(false)}
     >
-      <Grid container>
-        <Grid item xs={10} container>
-          <Button sx={taskButtonVisibility}>
+      <Mui.Grid container>
+        <Mui.Grid item xs={10} container>
+          <Mui.Button sx={taskButtonVisibility}>
             <DoubleVerticalMenuIcon />
-          </Button>
-          <Checkbox
+          </Mui.Button>
+          <Mui.Checkbox
             icon={<CircleOutlined />}
             checkedIcon={<CheckCircleOutlineIcon color="disabled" />}
           />
-          <ListItemText
+          <Mui.ListItemText
             primary={row.name}
             secondary={
               <div>
@@ -70,9 +46,9 @@ export default function TaskListItem({ row }) {
               </div>
             }
           />
-        </Grid>
-        <Grid item xs={2}>
-          <ButtonGroup
+        </Mui.Grid>
+        <Mui.Grid item xs={2}>
+          <Mui.ButtonGroup
             variant="text"
             sx={{
               ...taskButtonVisibility,
@@ -84,21 +60,21 @@ export default function TaskListItem({ row }) {
               },
             }}
           >
-            <Button>
+            <Mui.Button>
               <EditIcon />
-            </Button>
-            <Button>
+            </Mui.Button>
+            <Mui.Button>
               <DateIcon />
-            </Button>
-            <Button>
+            </Mui.Button>
+            <Mui.Button>
               <CommentIcon />
-            </Button>
-            <Button>
+            </Mui.Button>
+            <Mui.Button>
               <HorizontalMenuIcon />
-            </Button>
-          </ButtonGroup>
-        </Grid>
-      </Grid>
-    </ListItem>
+            </Mui.Button>
+          </Mui.ButtonGroup>
+        </Mui.Grid>
+      </Mui.Grid>
+    </Mui.ListItem>
   );
 }

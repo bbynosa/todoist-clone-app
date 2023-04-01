@@ -1,40 +1,32 @@
-import Button from "@mui/material/Button";
-import TaskList from "./TaskList";
-import { useEffect, useState } from "react";
-import TaskForm from "./TaskForm";
-import TaskEditForm from "./TaskEditForm";
-import { Grid, Paper, Typography } from "@mui/material";
-import axios from "../../api/axios";
-import Spinner from "../../components/Spinner";
 import * as React from "react";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import CssBaseline from "@mui/material/CssBaseline";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
+
+import * as Mui from "@mui/material";
+
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 
+import axios from "../../api/axios";
+
 // Local components
+import TaskList from "./TaskList";
+import TaskEditForm from "./TaskEditForm";
+import TaskViewEditModal from "./TaskViewEditModal";
 import AddTaskForm from "./AddTaskForm";
 
-export default function Dashboard() {
-  const [openEdit, setOpenEdit] = useState(false);
-  const [rows, setRows] = useState([]);
-  const [selectedTaskId, setSelectedTaskId] = useState("");
-  const [formMode, setFormMode] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [saveLoading, setSaveLoading] = useState(false);
-  const [selectedTask, setSelectedTask] = useState({});
-  const [open, setOpen] = useState(false);
+import Spinner from "../../components/Spinner";
 
-  useEffect(() => {
+export default function Dashboard() {
+  const [openEdit, setOpenEdit] = React.useState(false);
+  const [rows, setRows] = React.useState([]);
+  const [selectedTaskId, setSelectedTaskId] = React.useState("");
+  const [formMode, setFormMode] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+  const [saveLoading, setSaveLoading] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+
+  const [taskModalOpen, setTaskModalOpen] = React.useState(false);
+
+  React.useEffect(() => {
     try {
       listTodos();
     } catch (error) {
@@ -42,27 +34,12 @@ export default function Dashboard() {
     }
   }, []);
 
-  useEffect(() => {
-    try {
-      if (selectedTaskId) {
-        getTodo();
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }, [selectedTaskId]);
-
   const listTodos = async () => {
     // TODO: Fix invoking list tasks API twice
     setLoading(true);
     const { data } = await axios.get("api/tasks");
     setRows(data);
     setLoading(false);
-  };
-
-  const getTodo = async () => {
-    const { data } = await axios.get(`api/tasks/${selectedTaskId}`);
-    setSelectedTask(data);
   };
 
   const createTodo = async (data) => {
@@ -73,11 +50,6 @@ export default function Dashboard() {
     await axios.put(`api/tasks/${data.id}`, data);
 
   const deleteTodo = async (id) => await axios.delete(`api/tasks/${id}`);
-
-  const handleClickOpen = () => {
-    setFormMode("add");
-    setOpen(true);
-  };
 
   const saveTodo = async (task) => {
     try {
@@ -99,14 +71,7 @@ export default function Dashboard() {
 
   const selectTask = (taskId) => {
     setSelectedTaskId(taskId);
-    setFormMode("edit");
-    setOpenEdit(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setSelectedTask({});
-    setSelectedTaskId("");
+    setTaskModalOpen(true);
   };
 
   const handleCLoseEdit = () => {
@@ -125,56 +90,60 @@ export default function Dashboard() {
     setFormMode(mode);
   };
 
+  const closeTaskModal = () => {
+    setTaskModalOpen(false);
+  };
+
   return (
     <div>
-      <Grid container spacing={2}>
-        <Grid item xs={3}>
-          <Paper>
-            <List>
+      <Mui.Grid container spacing={2}>
+        <Mui.Grid item xs={3}>
+          <Mui.Paper>
+            <Mui.List>
               {["Inbox", "Starred", "Send email", "Drafts"].map(
                 (text, index) => (
-                  <ListItem key={text} disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
+                  <Mui.ListItem key={text} disablePadding>
+                    <Mui.ListItemButton>
+                      <Mui.ListItemIcon>
                         {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                      </ListItemIcon>
-                      <ListItemText primary={text} />
-                    </ListItemButton>
-                  </ListItem>
+                      </Mui.ListItemIcon>
+                      <Mui.ListItemText primary={text} />
+                    </Mui.ListItemButton>
+                  </Mui.ListItem>
                 )
               )}
-            </List>
-            <Divider />
-            <List>
+            </Mui.List>
+            <Mui.Divider />
+            <Mui.List>
               {["All mail", "Trash", "Spam"].map((text, index) => (
-                <ListItem key={text} disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>
+                <Mui.ListItem key={text} disablePadding>
+                  <Mui.ListItemButton>
+                    <Mui.ListItemIcon>
                       {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                    </ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItemButton>
-                </ListItem>
+                    </Mui.ListItemIcon>
+                    <Mui.ListItemText primary={text} />
+                  </Mui.ListItemButton>
+                </Mui.ListItem>
               ))}
-            </List>
-          </Paper>
-        </Grid>
-        <Grid item xs={9}>
+            </Mui.List>
+          </Mui.Paper>
+        </Mui.Grid>
+        <Mui.Grid item xs={9}>
           {!loading ? (
             <TaskList
               rows={rows}
-              selectTask={selectTask}
               deleteTask={deleteTask}
               saveTodo={saveTodo}
               formMode={handleFormMode}
               setRows={setRows}
+              setSelectedTaskId={selectTask}
             />
           ) : (
             <Spinner />
           )}
           <AddTaskForm saveTodo={saveTodo} formMode={setFormMode} />
-        </Grid>
-      </Grid>
+        </Mui.Grid>
+      </Mui.Grid>
       {openEdit && (
         <TaskEditForm
           open={openEdit}
@@ -184,6 +153,11 @@ export default function Dashboard() {
           saveLoading={saveLoading}
         />
       )}
+      <TaskViewEditModal
+        open={taskModalOpen}
+        onClose={closeTaskModal}
+        selectedTaskId={selectedTaskId}
+      />
     </div>
   );
 }
