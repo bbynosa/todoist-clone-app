@@ -16,7 +16,6 @@ import AddTaskForm from "./AddTaskForm";
 import Spinner from "../../components/Spinner";
 
 export default function Dashboard() {
-  const [openEdit, setOpenEdit] = React.useState(false);
   const [rows, setRows] = React.useState([]);
   const [selectedTaskId, setSelectedTaskId] = React.useState("");
   const [formMode, setFormMode] = React.useState("");
@@ -46,22 +45,18 @@ export default function Dashboard() {
     await axios.post("api/tasks", data);
   };
 
-  const editTodo = async (data) =>
+  const saveEditTask = async (data) =>
     await axios.put(`api/tasks/${data.id}`, data);
 
   const deleteTodo = async (id) => await axios.delete(`api/tasks/${id}`);
 
-  const saveTodo = async (task) => {
+  const saveTask = async (task) => {
     try {
-      setSaveLoading(true);
       if (formMode === "add") {
         await createTodo(task);
-        setSaveLoading(false);
         setOpen(false);
       } else if (formMode === "edit") {
-        await editTodo(task);
-        setSaveLoading(false);
-        setOpenEdit(false);
+        await saveEditTask(task);
       }
       await listTodos();
     } catch (error) {
@@ -72,11 +67,6 @@ export default function Dashboard() {
   const selectTask = (taskId) => {
     setSelectedTaskId(taskId);
     setTaskModalOpen(true);
-  };
-
-  const handleCLoseEdit = () => {
-    setOpenEdit(false);
-    setSelectedTaskId("");
   };
 
   const deleteTask = async (id) => {
@@ -133,7 +123,7 @@ export default function Dashboard() {
             <TaskList
               rows={rows}
               deleteTask={deleteTask}
-              saveTodo={saveTodo}
+              saveTask={saveTask}
               formMode={handleFormMode}
               setRows={setRows}
               setSelectedTaskId={selectTask}
@@ -141,22 +131,15 @@ export default function Dashboard() {
           ) : (
             <Spinner />
           )}
-          <AddTaskForm saveTodo={saveTodo} formMode={setFormMode} />
+          <AddTaskForm saveTask={saveTask} formMode={setFormMode} />
         </Mui.Grid>
       </Mui.Grid>
-      {openEdit && (
-        <TaskEditForm
-          open={openEdit}
-          handleClose={handleCLoseEdit}
-          id={selectedTaskId}
-          saveTask={saveTodo}
-          saveLoading={saveLoading}
-        />
-      )}
       <TaskViewEditModal
         open={taskModalOpen}
         onClose={closeTaskModal}
         selectedTaskId={selectedTaskId}
+        onEditTaskSave={saveTask}
+        formMode={setFormMode}
       />
     </div>
   );

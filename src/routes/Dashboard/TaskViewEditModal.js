@@ -18,16 +18,22 @@ import { ReactComponent as MoveUpIcon } from "../../icons/TaskEditModal/move_up.
 import { ReactComponent as MoveDownIcon } from "../../icons/TaskEditModal/move_down.svg";
 import { ReactComponent as MenuIcon } from "../../icons/TaskEditModal/menu.svg";
 import { ReactComponent as CloseIcon } from "../../icons/TaskEditModal/close.svg";
-
 import { ReactComponent as PriorityIcon } from "../../icons/icon_priority.svg";
+
+import moment from "moment";
 
 export default function TaskViewEditModal({
   open,
   onClose,
   selectedTaskId,
+  onEditTaskSave,
+  formMode,
 }) {
   const [task, setTask] = React.useState({});
   const [loading, setLoading] = React.useState(true);
+  const [selectText, setSelectText] = React.useState(false);
+  const [leftTextField, setLeftTextField] = React.useState(false);
+  const [taskDueDateFormatted, setTaskDueDateFormatted] = React.useState({});
 
   React.useEffect(() => {
     async function getTask() {
@@ -37,21 +43,54 @@ export default function TaskViewEditModal({
     getTask();
   }, [selectedTaskId]);
 
+  React.useEffect(() => {
+    const due_date_fmt = formatDateToApiFormat(task.due_date);
+    const created_at_fmt = formatDateToApiFormat(task.created_at);
+    const updated_at_fmt = formatDateToApiFormat(task.updated_at);
+
+    setTask({
+      ...task,
+      due_date: due_date_fmt,
+      created_at: created_at_fmt,
+      updated_at: updated_at_fmt,
+    });
+  }, [task]);
+
   const getTaskFromApi = async (taskId) => {
     const { data } = await api.get(`/api/tasks/${taskId}`);
 
     //get name of month from Date():https://stackoverflow.com/questions/1643320/get-month-name-from-date
     const dueDate = new Date(data.due_date);
-    data.due_date_day = dueDate.getDay();
-    data.due_date_month_name = dueDate
-      .toLocaleString("default", { month: "long" })
-      .substring(0, 3);
+    setTaskDueDateFormatted({
+      day: dueDate.getDay(),
+      monthName: dueDate
+        .toLocaleString("default", { month: "long" })
+        .substring(0, 3),
+    });
 
     setTask(data);
     setLoading(false);
   };
 
   const handleClose = () => onClose();
+
+  const handleOnChange = (event) => {
+    const { name, value } = event.target;
+    setTask(() => {
+      return {
+        ...task,
+        [name]: value,
+      };
+    });
+  };
+
+  const handleSave = () => {
+    formMode("edit");
+    onEditTaskSave(task);
+  };
+
+  const formatDateToApiFormat = (date) =>
+    moment(date).format("YYYY-MM-DD HH:mm:ss");
 
   const headerButtonStyle = {
     p: "2px",
@@ -122,7 +161,10 @@ export default function TaskViewEditModal({
                 <Mui.Button sx={headerButtonStyle}>
                   <MenuIcon />
                 </Mui.Button>
-                <Mui.Button sx={headerButtonStyle} onClick={() => handleClose()}>
+                <Mui.Button
+                  sx={headerButtonStyle}
+                  onClick={() => handleClose()}
+                >
                   <CloseIcon />
                 </Mui.Button>
               </Mui.Grid>
@@ -140,18 +182,119 @@ export default function TaskViewEditModal({
                     />
                   </Mui.Grid>
                   <Mui.Grid item xs={11} paddingLeft="10px" paddingRight="25px">
-                    <Mui.Grid paddingBottom="15px">
-                      <Mui.DialogContentText
-                        fontWeight="bold"
-                        fontSize="20px"
-                        color="black"
-                        paddingBottom="15px"
+                    <Mui.Grid
+                      paddingBottom="15px"
+                      // oncClick={() => setSelectText(true)}
+                    >
+                      <Mui.Box
+                        sx={
+                          selectText
+                            ? {
+                                border: !leftTextField
+                                  ? "1px solid #999"
+                                  : "2px solid #eee",
+                                borderRadius: "10px",
+                              }
+                            : {}
+                        }
+                        p={0}
                       >
-                        {task.name}
-                      </Mui.DialogContentText>
-                      <Mui.DialogContentText paddingBottom="30px">
-                        {task.description}
-                      </Mui.DialogContentText>
+                        <Mui.Box padding="5px">
+                          <Mui.FormControl fullWidth>
+                            <Mui.TextField
+                              autoFocus
+                              fullWidth
+                              type="text"
+                              placeholder="Task name"
+                              name="name"
+                              onChange={handleOnChange}
+                              value={task.name}
+                              sx={{
+                                input: {
+                                  fontWeight: "bold",
+                                  padding: 0,
+                                },
+                                fieldset: {
+                                  display: "none",
+                                },
+                              }}
+                              onClick={() => {
+                                setSelectText(true);
+                                setLeftTextField(false);
+                              }}
+                              onBlur={() => setLeftTextField(true)}
+                            />
+                            <Mui.TextField
+                              fullWidth
+                              type="text"
+                              placeholder="Task description"
+                              name="description"
+                              onChange={handleOnChange}
+                              value={task.description}
+                              sx={{
+                                input: {
+                                  fontWeight: "normal",
+                                  fontSize: "14px",
+                                  padding: 0,
+                                },
+                                fieldset: {
+                                  display: "none",
+                                },
+                              }}
+                              onClick={() => {
+                                setSelectText(true);
+                                setLeftTextField(false);
+                              }}
+                              onBlur={() => setLeftTextField(true)}
+                            />
+                          </Mui.FormControl>
+                        </Mui.Box>
+                      </Mui.Box>
+                      {selectText && (
+                        <Mui.Grid container justifyContent="flex-end">
+                          <Mui.Button
+                            type="button"
+                            onClick={() => setSelectText(false)}
+                            sx={{
+                              color: "black",
+                              fontWeight: "normal",
+                              textTransform: "none",
+                              textDecoration: "none",
+                              backgroundColor: "#f5f5f5",
+                              px: "12px",
+                              mr: 1,
+                              "&:hover": {
+                                backgroundColor: "#e5e5e5",
+                              },
+                            }}
+                          >
+                            Cancel
+                          </Mui.Button>
+                          <Mui.Button
+                            type="button"
+                            // disabled={!validate(draftTask)}
+                            onClick={() => handleSave()}
+                            sx={{
+                              color: "white",
+                              fontWeight: "normals",
+                              textTransform: "none",
+                              textDecoration: "none",
+                              backgroundColor: "#dd4b39",
+                              px: "12px",
+                              "&:hover": {
+                                backgroundColor: "#b03d32",
+                              },
+                              ":disabled": {
+                                backgroundColor: "rgba(219, 76, 63, 0.4)",
+                                color: "white",
+                              },
+                            }}
+                          >
+                            Save
+                          </Mui.Button>
+                        </Mui.Grid>
+                      )}
+
                       <Mui.Button
                         sx={{
                           color: "gray",
@@ -235,7 +378,7 @@ export default function TaskViewEditModal({
                       <DateIcon
                         style={{ color: "#d1453b", paddingRight: 10 }}
                       />
-                      {task.due_date_day} {task.due_date_month_name}
+                      {taskDueDateFormatted.day} {taskDueDateFormatted.monthName}
                     </Mui.DialogContentText>
                   </Mui.Grid>
                 </Mui.Grid>
