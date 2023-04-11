@@ -11,7 +11,7 @@ import InlineTaskForm from './InlineTaskForm';
 import { ReactComponent as AddIcon } from "../../icons/icon_add.svg";
 
 // Component definition
-export default function AddTaskForm({ saveTodo, formMode }) {
+export default function AddTaskForm({ saveTask, formMode }) {
   const [showForm, setShowForm] = React.useState(false);
 
   React.useEffect(() => {
@@ -24,7 +24,7 @@ export default function AddTaskForm({ saveTodo, formMode }) {
 
   // Define handlers
   const onSave = (task) => {
-    saveTodo(task);
+    saveTask(task);
   };
 
   const onCancel = () => {
