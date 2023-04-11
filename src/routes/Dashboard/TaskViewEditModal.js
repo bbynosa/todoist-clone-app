@@ -29,32 +29,39 @@ export default function TaskViewEditModal({
   onEditTaskSave,
   formMode,
 }) {
-  const [task, setTask] = React.useState({});
+  const [task, setTask] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [selectText, setSelectText] = React.useState(false);
   const [leftTextField, setLeftTextField] = React.useState(false);
   const [taskDueDateFormatted, setTaskDueDateFormatted] = React.useState({});
 
   React.useEffect(() => {
-    async function getTask() {
+    const getTask = async () => {
       await getTaskFromApi(selectedTaskId);
-    }
+    };
 
     getTask();
   }, [selectedTaskId]);
 
   React.useEffect(() => {
-    const due_date_fmt = formatDateToApiFormat(task.due_date);
-    const created_at_fmt = formatDateToApiFormat(task.created_at);
-    const updated_at_fmt = formatDateToApiFormat(task.updated_at);
+    const formatDates = () => {
+      const due_date_fmt = formatDateToApiFormat(task.due_date);
+      const created_at_fmt = formatDateToApiFormat(task.created_at);
+      const updated_at_fmt = formatDateToApiFormat(task.updated_at);
 
-    setTask({
-      ...task,
-      due_date: due_date_fmt,
-      created_at: created_at_fmt,
-      updated_at: updated_at_fmt,
-    });
+      setTask({
+        ...task,
+        due_date: due_date_fmt,
+        created_at: created_at_fmt,
+        updated_at: updated_at_fmt,
+      });
+    };
+    if (task !== null) formatDates();
   }, [task]);
+
+  React.useEffect(() => {
+    if (task !== null) handleSave();
+  }, [task?.priority]);
 
   const getTaskFromApi = async (taskId) => {
     const { data } = await api.get(`/api/tasks/${taskId}`);
@@ -68,11 +75,14 @@ export default function TaskViewEditModal({
         .substring(0, 3),
     });
 
-    setTask(data);
+    setTask({ ...data });
     setLoading(false);
   };
 
-  const handleClose = () => onClose();
+  const handleClose = () => {
+    if (selectText) setSelectText(false);
+    onClose();
+  };
 
   const handleOnChange = (event) => {
     const { name, value } = event.target;
@@ -87,6 +97,7 @@ export default function TaskViewEditModal({
   const handleSave = () => {
     formMode("edit");
     onEditTaskSave(task);
+    setSelectText(false);
   };
 
   const formatDateToApiFormat = (date) =>
@@ -124,6 +135,7 @@ export default function TaskViewEditModal({
     },
   ];
 
+  // TODO: Refactor this form. some components can be reusable
   return (
     <Mui.Dialog
       open={open}
@@ -251,7 +263,11 @@ export default function TaskViewEditModal({
                         </Mui.Box>
                       </Mui.Box>
                       {selectText && (
-                        <Mui.Grid container justifyContent="flex-end">
+                        <Mui.Grid
+                          container
+                          justifyContent="flex-end"
+                          paddingTop="10px"
+                        >
                           <Mui.Button
                             type="button"
                             onClick={() => setSelectText(false)}
@@ -378,7 +394,8 @@ export default function TaskViewEditModal({
                       <DateIcon
                         style={{ color: "#d1453b", paddingRight: 10 }}
                       />
-                      {taskDueDateFormatted.day} {taskDueDateFormatted.monthName}
+                      {taskDueDateFormatted.day}{" "}
+                      {taskDueDateFormatted.monthName}
                     </Mui.DialogContentText>
                   </Mui.Grid>
                 </Mui.Grid>
@@ -391,28 +408,73 @@ export default function TaskViewEditModal({
                     </Mui.DialogContentText>
                   </Mui.Grid>
                   <Mui.Grid item>
-                    <Mui.DialogContentText>
-                      {task.priority !== 4 ? (
-                        <FlagIcon
-                          style={{
-                            color: priorityIconColors.find(
-                              (x) => x.value === task.priority
-                            ).color,
-                            paddingRight: 10,
-                          }}
-                        />
-                      ) : (
-                        <PriorityIcon
-                          style={{
-                            color: priorityIconColors.find(
-                              (x) => x.value === task.priority
-                            ).color,
-                            paddingRight: 10,
-                          }}
-                        />
-                      )}
-                      P{task.priority}
-                    </Mui.DialogContentText>
+                    <Mui.Select
+                      label="Priority"
+                      name="priority"
+                      onChange={handleOnChange}
+                      value={task.priority}
+                      sx={{
+                        "&": {
+                          height: "28px",
+                          display: "flex",
+                          width: "auto",
+                        },
+                        fieldset: {
+                          display: "none",
+                        },
+                        "& .MuiOutlinedInput-input": {
+                          padding: 0,
+                        },
+                      }}
+                      renderValue={(value) =>
+                        value !== 4 ? (
+                          <>
+                            <FlagIcon
+                              style={{
+                                color: priorityIconColors.find(
+                                  (x) => x.value === value
+                                ).color,
+                                paddingRight: 10,
+                              }}
+                            />
+                            P{value}
+                          </>
+                        ) : (
+                          <>
+                            <PriorityIcon
+                              style={{
+                                color: priorityIconColors.find(
+                                  (x) => x.value === value
+                                ).color,
+                                paddingRight: 10,
+                              }}
+                            />
+                            P{value}
+                          </>
+                        )
+                      }
+                    >
+                      {priorityIconColors.map(({ value, color }) => (
+                        <Mui.MenuItem key={value} value={value}>
+                          {value !== 4 ? (
+                            <FlagIcon
+                              style={{
+                                color: color,
+                                paddingRight: 10,
+                              }}
+                            />
+                          ) : (
+                            <PriorityIcon
+                              style={{
+                                color: color,
+                                paddingRight: 10,
+                              }}
+                            />
+                          )}
+                          Priority {value}
+                        </Mui.MenuItem>
+                      ))}
+                    </Mui.Select>
                   </Mui.Grid>
                 </Mui.Grid>
                 <Mui.Grid item container direction="column" spacing={1}>
