@@ -161,18 +161,19 @@ export default function Dashboard() {
         </Grid>
         <Grid item md={9}>
           {!loading ? (
-            <TaskList
-              rows={rows}
-              selectTask={selectTask}
-              deleteTask={deleteTask}
-              saveTodo={saveTodo}
-              formMode={handleFormMode}
-              setRows={setRows}
-            />
+            <>
+              <TaskList
+                rows={rows}
+                selectTask={selectTask}
+                deleteTask={deleteTask}
+                saveTodo={saveTodo}
+                formMode={handleFormMode}
+                setRows={setRows}
+              />
+            </>
           ) : (
             <Spinner />
           )}
-          <AddTaskForm saveTodo={saveTodo} formMode={setFormMode} />
         </Grid>
       </Grid>
       {openEdit && (

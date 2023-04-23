@@ -35,6 +35,7 @@ import { ReactComponent as OpenMoreIcon } from "../../icons/open-more.svg";
 
 import Spinner from "../../components/Spinner";
 import TaskListItem from "./TaskItem";
+import AddTaskForm from "./AddTaskForm";
 
 const status = ["Not started", "In progress", "Completed"];
 const priorities = ["Urgent", "Important", "Medium", "Low"];
@@ -113,14 +114,19 @@ export default function TaskList({
         </Grid>
         <List sx={style}>
           {rows.length ? (
-            rows.map((row) => (
-              <>
-                <TaskListItem row={row} key={row.id} />
-                <Divider />
-              </>
-            ))
+            <>
+              {rows.map((row) => (
+                <>
+                  <TaskListItem row={row} key={row.id} />
+                  <Divider />
+                </>
+              ))}
+              <AddTaskForm saveTodo={saveTodo} formMode={formMode} />
+            </>
           ) : (
-            <Spinner />
+            <>
+              <Spinner />
+            </>
           )}
         </List>
       </Grid>
