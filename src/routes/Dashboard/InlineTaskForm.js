@@ -25,7 +25,7 @@ const emptyTask = {
 };
 
 // Component definition
-export default function InlineTaskForm({ taskToEdit, onCancel, onSave }) {
+export default function InlineTaskForm({ taskToEdit, onCancel, onSave, maxLines = 5 }) {
   const isAdd = !taskToEdit;
   const [draftTask, setDraftTask] = React.useState({ ...(taskToEdit || emptyTask) });
 
@@ -95,46 +95,48 @@ export default function InlineTaskForm({ taskToEdit, onCancel, onSave }) {
           border: '1px solid #999'
         }
       }} p={0}>
-        <mui.FormControl fullWidth sx={{ p: 1 }}>
-          <mui.TextField
-            autoFocus
-            fullWidth
-            type="text"
-            placeholder="Task name"
-            name="name"
-            onChange={handleOnChange}
-            value={draftTask.name}
-            sx={{
-              input: {
-                fontWeight: 'bold',
-                p: 0
-              },
-              fieldset: {
-                display: 'none'
-              }
-            }}
-          />
-          <mui.TextField
-            multiline
-            fullWidth
-            type="text"
-            placeholder="Description"
-            name="description"
-            onChange={handleOnChange}
-            value={draftTask.description}
-            sx={{
-              textarea: {
-                fontWeight: 'normal',
-                p: 0
-              },
-              '.MuiInputBase-root': {
-                p: 0
-              },
-              fieldset: {
-                display: 'none'
-              }
-            }}
-          />
+        <mui.Box sx={{ p: 1 }}>
+          <mui.Box sx={{ maxHeight: (maxLines + 1) * 24, overflowY: 'auto', overflowX: 'hidden' }} p={0}>
+            <mui.TextField
+              autoFocus
+              fullWidth
+              type="text"
+              placeholder="Task name"
+              name="name"
+              onChange={handleOnChange}
+              value={draftTask.name}
+              sx={{
+                input: {
+                  fontWeight: 'bold',
+                  p: 0
+                },
+                fieldset: {
+                  display: 'none'
+                }
+              }}
+            />
+            <mui.TextField
+              multiline
+              fullWidth
+              type="text"
+              placeholder="Description"
+              name="description"
+              onChange={handleOnChange}
+              value={draftTask.description}
+              sx={{
+                textarea: {
+                  fontWeight: 'normal',
+                  p: 0
+                },
+                '.MuiInputBase-root': {
+                  p: 0
+                },
+                fieldset: {
+                  display: 'none'
+                }
+              }}
+            />
+          </mui.Box>
           <mui.Grid my={1} justifyContent="flex-start" container>
             <mui.TextField
               type="date"
@@ -183,7 +185,7 @@ export default function InlineTaskForm({ taskToEdit, onCancel, onSave }) {
                 </mui.MenuItem>
               )}
             </mui.Select>
-            <DateField 
+            <DateField
               placeholder="Due date"
               name="due_date"
               sx={{
@@ -191,9 +193,9 @@ export default function InlineTaskForm({ taskToEdit, onCancel, onSave }) {
                   color: 'red'
                 }
               }}
-              />
+            />
           </mui.Grid>
-        </mui.FormControl>
+        </mui.Box>
         {/* https://stackoverflow.com/questions/45159071/mui-how-to-align-a-component-to-the-center-right */}
         <mui.Grid p={1} justifyContent="flex-end" container sx={{ borderTop: '1px solid #eee' }}>
           <mui.Button
