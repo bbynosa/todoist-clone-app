@@ -20,7 +20,10 @@ export default function DateField({ name, value, placeholder, onChange, sx }) {
   const onSelect = (date) => {
     setSelectedDate(date);
     setAnchorEl(null);
-    onChange({ target: { name: name, value: date.toISOString() } });
+
+    if (onChange) {
+      onChange({ target: { name: name, value: date.toISOString() } });
+    }
   }
 
   // Render component
