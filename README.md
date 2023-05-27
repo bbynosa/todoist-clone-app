@@ -3,6 +3,7 @@
 1. [Node.js](https://nodejs.org/en/download)
 
 ### Run project
+Commands are run on a shell terminal (PowerShell or Coomand Prompt)
 1. Set the project as your working directory
 2. Install dependencies
 ```cli
